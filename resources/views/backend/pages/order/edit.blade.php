@@ -1,4 +1,116 @@
+@php
+    use Carbon\Carbon;
+@endphp
 @extends('backend.layout.app')
+@section('customcss')
+    <style>
+        .invoice-box {
+            max-width: 80%;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr td:nth-child(n + 2) {
+            text-align: right;
+        }
+
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        }
+
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table tr.item.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box table tr.item input {
+            padding-left: 5px;
+        }
+
+        .invoice-box table tr.item td:first-child input {
+            margin-left: -5px;
+            width: 100%;
+        }
+
+        .invoice-box table tr.total td:nth-child(2) {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        .invoice-box input[type="number"] {
+            width: 60px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+        }
+
+        /** RTL **/
+        .rtl {
+            direction: rtl;
+            font-family: Tahoma, "Helvetica Neue", "Helvetica", Helvetica, Arial,
+                sans-serif;
+        }
+
+        .rtl table {
+            text-align: right;
+        }
+
+        .rtl table tr td:nth-child(2) {
+            text-align: left;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
@@ -6,75 +118,116 @@
                 <h4 class="card-title">
                     Sipariş Detay
                 </h4>
-        <div class="d-flex flex-row justify-content-end align-items-end p-1">
-            <a href="{{ route('panel.generate.pdf', $order->id) }}"
-                class="btn btn-success">Fatura Görüntüle</a>
-        </div>
-                <form action="{{ route('panel.order.update', $order->id) }}" class="forms-sample" method="POST"
+                <form action="{{ route('panel.order.update', $invoice->id) }}" class="forms-sample" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    @if (!empty($order->id))
+                    @if (!empty($invoice->id))
                         @method('PUT')
                     @endif
 
                     <div class="form-group">
-                        <label for="order_no">Sipariş Kodu</label>
-                        <input type="text" class="form-control" id="order_no" value="{{ DonusumleriGeriDondur($order->order_no) ?? '' }}"
-                            readonly>
+                        <h4>Sipariş Kodu</h4>
+                        <p class="p-1 bg-light text-dark">{{ DonusumleriGeriDondur($invoice->order_no) ?? '' }}</p>
                     </div>
 
                     <div class="form-group">
-                        <label for="c_name">İsim Soyisim</label>
-                        <input type="text" class="form-control" id="c_name" value="{{ DonusumleriGeriDondur($order->c_name) ?? '' }}"
-                            readonly>
+                        <h4>İsim Soyisim</h4>
+                        <p class="p-1 bg-light text-dark">{{ DonusumleriGeriDondur($invoice->c_name) ?? '' }}</p>
                     </div>
                     <div class="form-group">
-                        <label for="c_email_address">Email Adres</label>
-                        <input type="c_email_address" class="form-control" id="c_email_address" value="{{ DonusumleriGeriDondur($order->c_email_address) ?? '' }}"
-                            readonly>
+                        <h4>Telefon Numarası</h4>
+                        <p class="p-1 bg-light text-dark">{{ DonusumleriGeriDondur($invoice->c_phone) ?? '' }}</p>
                     </div>
                     <div class="form-group">
-                        <label for="c_phone">Telefon Numarası</label>
-                        <input type="text" class="form-control" id="c_phone" value="{{ $order->c_phone ?? '' }}" readonly>
+                        <h4>Email Adres</h4>
+                        <p class="p-1 bg-light text-dark">{{ $invoice->c_email_address ?? '' }}</p>
+                    </div>
+                    <div class="form-group">
+                        <h4>Adres</h4>
+                        <p class="p-1 bg-light text-dark">
+                            {{ DonusumleriGeriDondur($invoice->c_address) ?? '' }}
+                            {{ DonusumleriGeriDondur($invoice->c_state_country) ?? '' }} <br>
+                            {{ DonusumleriGeriDondur($invoice->c_country) ?? '' }} /
+                            {{ DonusumleriGeriDondur($invoice->c_city) ?? '' }} <br>
+                            {{ DonusumleriGeriDondur($invoice->c_postal_zip) ?? '' }}
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <h4 for="icerik">Sipariş Notu</h4>
+                        <p class="p-1 bg-light">
+                            {{ DonusumleriGeriDondur($invoice->order_note) ?? '' }}
+                        </p>
                     </div>
 
-                    <div class="form-group">
-                        <label for="c_companyname">Şirket Adı</label>
-                        <input type="text" class="form-control" id="c_companyname" value="{{ $order->c_companyname ?? '' }}" readonly>
-                    </div>
+                    @empty(DonusumleriGeriDondur($invoice->c_companyname))
+                        <div class="form-group">
+                            <h4 for="icerik">Şirket Adı</h4>
+                            <p class="p-1 bg-light">{{ DonusumleriGeriDondur($invoice->c_companyname) ?? '' }}</p>
+                        </div>
+                    @endempty
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ürün Adı
+                                </th>
+                                <th>
+                                    Fiyat
+                                </th>
+                                <th>
+                                    Adet
+                                </th>
+                                <th>
+                                    KDV
+                                </th>
+                                <th>
+                                    Toplam Tutar
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $totalPrice = 0;
+                            @endphp
+                            @if (!empty($invoice->orders) && $invoice->orders->count() > 0)
+                                @foreach ($invoice->orders as $order)
+                                    <tr class="item" item-id='{{ $order->id }}'>
+                                        <td class="py-1">
+                                            {{ $order['name'] ?? '' }}
+                                        </td>
+                                        <td class="text-wrap">
+                                            {{ number_format($order['price'],2) ?? '0' }} ₺
+                                        </td>
+                                        <td class="text-wrap">
+                                            {{ $order['qty'] ?? '0' }}
+                                        </td>
+                                        <td>{{ number_format($order['kdv'] * $order['qty'], 2) }}₺</td>
+                                        <td>{{ number_format($order['price'] * $order['qty'] + $order['kdv'] * $order['qty'], 2) }}₺
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $totalPrice += $order['price'] * $order['qty'] + $order['kdv'] * $order['qty'];
+                                    @endphp
+                                @endforeach
+                                <tr>
+                                    <td colspan="4">Sişariş Toplam Tutar: </td>
+                                    <td colspan="1" class="bg-success text-white">{{ number_format($totalPrice,2)}}₺</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
 
-                    <div class="form-group">
-                        <label for="c_country">Ülke</label>
-                        <input type="text" class="form-control" id="c_country" value="{{ $order->c_country ?? '' }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="c_city">Şehir</label>
-                        <input type="text" class="form-control" id="c_city" value="{{ $order->c_city ?? '' }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="c_state_country">Sokak</label>
-                        <input type="text" class="form-control" id="c_state_country" value="{{ $order->c_state_country ?? '' }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="c_address">Adres Bilgisi</label>
-                        <input type="text" class="form-control" id="c_address" value="{{ $order->c_address ?? '' }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="c_postal_zip">Posta Kodu</label>
-                        <input type="text" class="form-control" id="c_postal_zip" value="{{ $order->c_postal_zip ?? '' }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="order_note">Sipariş Notu</label>
-                        <textarea type="text" class="form-control" id="order_note" rows="5" readonly>{{ DonusumleriGeriDondur($order->order_note) ?? '' }} </textarea>
-                    </div>
                     <div class="form-group">
                         <label for="durum">Durum</label>
+                        @error('status')
+                            <span class="text-danger">{{ $messages }}</span>
+                        @enderror
                         @php
-                            $statu = $order->status ?? '1';
+                            $statu = $invoice->status ?? '1';
                         @endphp
                         <select class="form-control" id="durum" name="status">
-                            <option value="1" {{ $statu == '1' ? 'selected' : '' }}>Sipariş Onaylandı</option>
-                            <option value="0" {{ $statu == '0' ? 'selected' : '' }}>Sipariş Geldi</option>
+                            <option value="1" {{ $statu == '1' ? 'selected' : '' }}>Aktif</option>
+                            <option value="0" {{ $statu == '0' ? 'selected' : '' }}>Pasif</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Kaydet</button>
@@ -83,17 +236,5 @@
             </div>
         </div>
     </div>
-@endsection
 
-@section('customjs')
-    <script>
-        @if (session()->get('success'))
-            alertify.success('{{ session()->get("success") }}');
-        @endif
-        @if ($errors)
-            @foreach ($errors->all() as $error)
-                alertify.error('{{ $error }}')
-            @endforeach
-        @endif
-    </script>
 @endsection

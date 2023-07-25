@@ -118,7 +118,6 @@
                             <img src="{{ asset($companyLogo) }}" style="width:100%; max-width:300px;"
                                 class="img-fluid">
                         </td>
-
                         <td>
                             <span style="font-size: 1.3rem;" class="text-danger">
                                 Sipariş Kodu : {{ DonusumleriGeriDondur($invoice->order_no) ?? '' }}
@@ -204,4 +203,3 @@
         </tr>
     </table>
 </div>
-

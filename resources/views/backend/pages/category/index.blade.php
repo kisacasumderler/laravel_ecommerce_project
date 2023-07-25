@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Striped Table</h4>
                     <p class="card-description">
-                        <a href="{{ route('panel.category.create') }}" class="btn btn-primary">Yeni category</a>
+                        <a href="{{ route('panel.category.create') }}" class="btn btn-primary">Yeni Kategori</a>
                     </p>
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -86,9 +86,9 @@
                 },
                 success: function(response) {
                     if (response.status == '1') {
-                        alertify.success("Durum aktif edildi.");
+                        toastr.success("Durum aktif edildi.");
                     } else {
-                        alertify.error("Durum Pasif edildi");
+                        toastr.error("Durum Pasif edildi");
                     }
                 }
             })
@@ -114,14 +114,14 @@
                 success: function(response) {
                     if (response.error == false) {
                         item.remove();
-                        alertify.success(response.message);
+                        toastr.success(response.message);
                     }else {
-                        alertify.error("işlem sırasında hata alınmaktadır.");
+                        toastr.error("işlem sırasında hata alınmaktadır.");
                     }
                 }
             })
             }, function() {
-                alertify.error('Cancel')
+                toastr.error('Cancel')
             });
 
 

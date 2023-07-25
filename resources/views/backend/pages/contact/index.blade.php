@@ -98,9 +98,9 @@
                     },
                     success: function(response) {
                         if (response.status == '1') {
-                            alertify.success("Durum aktif edildi.");
+                            toastr.success("Durum aktif edildi.");
                         } else {
-                            alertify.error("Durum Pasif edildi");
+                            toastr.error("Durum Pasif edildi");
                         }
                     }
                 })
@@ -128,15 +128,15 @@
                             success: function(response) {
                                 if (response.error == false) {
                                     item.remove();
-                                    alertify.success(response.message);
+                                    toastr.success(response.message);
                                 } else {
-                                    alertify.error("işlem sırasında hata alınmaktadır.");
+                                    toastr.error("işlem sırasında hata alınmaktadır.");
                                 }
                             }
                         })
                     },
                     function() {
-                        alertify.error('Cancel')
+                        toastr.error('Cancel')
                     });
             });
         })

@@ -84,14 +84,14 @@
                 success: function(response) {
                     if (response.error == false) {
                         item.remove();
-                        alertify.success(response.message);
+                        toastr.success(response.message);
                     }else {
-                        alertify.error("işlem sırasında hata alınmaktadır.");
+                        toastr.error("işlem sırasında hata alınmaktadır.");
                     }
                 }
             })
             }, function() {
-                alertify.error('Cancel')
+                toastr.error('Cancel')
             });
         });
         })

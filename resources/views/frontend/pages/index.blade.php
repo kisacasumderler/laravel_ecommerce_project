@@ -29,7 +29,7 @@
                                 </div>
                             @endisset
 
-                            <a href="{{ route($slider->link ?? 'urunler') }}" class="d-block ImgCapa">
+                            <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block ImgCapa">
                                 <img src="{{ asset($slider->image ?? 'images/sliderbg.jpg') }}" alt="..."
                                     class="ImageDesk">
                                 <img src="{{ asset($slider->MobileImage ?? 'images/mobile_sliderbg.jpg') }}" alt=""

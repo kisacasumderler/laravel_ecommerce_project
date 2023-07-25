@@ -17,27 +17,13 @@ class OrderController extends Controller
         return view('backend.pages.order.index',compact('orders'));
     }
     public function edit($id) {
-        $order = Invoice::where('id', $id)->firstOrfail();
-        return view('backend.pages.order.edit',compact('order'));
-    }
-
-    public function generatePDF(Request $request, $id)
-    {
         $invoice = Invoice::where('id', $id)->with('orders')->firstOrFail();
 
         $data =  SiteSetting::all();
         $companyAddress =  $data->where('name', 'address')->value('data') ?? '';
         $companyLogo = $data->where('name', 'logo')->value('data') ?? '';
 
-        $html = view('backend.pages.order.invoice', compact('companyAddress', 'companyLogo', 'invoice'))->render();
-
-
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        return view('backend.pages.order.invoice', compact('companyAddress', 'companyLogo', 'invoice'));
+        return view('backend.pages.order.edit',compact('companyAddress', 'companyLogo', 'invoice'));
     }
 
 

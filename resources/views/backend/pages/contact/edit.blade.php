@@ -53,15 +53,4 @@
     </div>
 @endsection
 
-@section('customjs')
-    <script>
-        @if (session()->get('success'))
-            alertify.success('{{ session()->get("success") }}');
-        @endif
-        @if ($errors)
-            @foreach ($errors->all() as $error)
-                alertify.error('{{ $error }}')
-            @endforeach
-        @endif
-    </script>
-@endsection
+

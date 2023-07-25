@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{asset('/')}}css/style.css">
     <link rel="stylesheet" href="{{asset('backend/css/alertify.min.css')}}">
     <link rel="icon" href="{{asset('/images/favicon.png')}}" type="image/png">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
   </head>
   <body>
 
@@ -47,6 +47,20 @@
   <script src="{{asset('/')}}js/jquery.magnific-popup.min.js"></script>
   <script src="{{asset('backend/js/alertify.min.js')}}"></script>
   <script src="{{asset('/')}}js/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>
+      @if (session()->get('success'))
+          toastr.success("{{ session()->get('success') }}");
+      @endif
+      @if (session()->get('error'))
+          toastr.error("{{ session()->get('error') }}");
+      @endif
+      @if (count($errors))
+          @foreach ($errors->all() as $error)
+              toastr.error("{{$error}}");
+          @endforeach
+      @endif
+  </script>
   @yield('customjs')
   <script src="{{asset('/')}}js/main.js"></script>
 

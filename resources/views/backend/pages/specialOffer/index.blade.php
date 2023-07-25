@@ -137,20 +137,20 @@
                     },
                     success: function(response) {
                         if (response.status == '1') {
-                            alertify.success("Duyuru Yayında.");
+                            toastr.success("Duyuru Yayında.");
                         } else {
-                            alertify.error("Duyuru Yayından Kaldırıldı.");
+                            toastr.error("Duyuru Yayından Kaldırıldı.");
                         }
                     }
                 })
             });
 
             @if (session()->get('success'))
-            alertify.success('{{ session()->get("success") }}');
+            toastr.success('{{ session()->get("success") }}');
         @endif
         @if ($errors)
             @foreach ($errors->all() as $error)
-                alertify.error('{{ $error }}')
+                toastr.error('{{ $error }}')
             @endforeach
         @endif
         });
