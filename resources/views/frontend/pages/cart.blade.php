@@ -83,10 +83,14 @@
                                             <td class="ProductTotalPrice">
                                                 {{ number_format($cart['price'] * $cart['qty'], 2) }}₺</td>
                                             <td>
-                                                <form action="{{ route('sepet.remove') }}" method="POST">
+                                                <form method="POST" class="removeItem">
                                                     @csrf
-                                                    <input type="hidden" name='product_id' value="{{ $key }}">
-                                                    <button type="submit" class="btn btn-primary btn-sm">X</button>
+                                                    @php
+                                                        $sifrele = sifrele($key);
+                                                    @endphp
+                                                    <input type="hidden" name='product_id' value="{{ $sifrele }}">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-sm">X</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -220,6 +224,26 @@
             function formatNumber(number) {
                 return number.toFixed(2) + '₺';
             }
+
+            $(document).on('click', '.removeItem', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                var item = $(this);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "POST",
+                    url: "{{ route('sepet.remove') }}",
+                    data : formData,
+                    success: function(response) {
+                        toastr.success(response.message);
+                        $('.count').text(response.sepetCount);
+                        item.closest('.orderItem').remove();
+                    }
+                })
+            })
+
         });
     </script>
 @endsection

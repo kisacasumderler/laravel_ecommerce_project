@@ -108,5 +108,25 @@ if(!function_exists('strLimit')) {
 }
 
 
+use Illuminate\Support\Facades\Crypt;
+
+function sifrele($content)
+{
+    $encryptedContent = Crypt::encryptString($content);
+    return $encryptedContent;
+}
+
+function sifrecoz($encryptedContent)
+{
+    try {
+        $decryptedContent = Crypt::decryptString($encryptedContent);
+        return $decryptedContent;
+    } catch (Illuminate\Contracts\Encryption\DecryptException $e) {
+        $hata = 'Şifre çözme işlemi başarısız oldu';
+        return null;
+    }
+}
+
+
 
 ?>
