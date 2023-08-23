@@ -1,13 +1,6 @@
 @extends('frontend.layout.layout')
 @section('content')
-    <div class="bg-light py-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 mb-0"><a href="{{ route('anasayfa') }}">Home</a> <span class="mx-2 mb-0">/</span> <strong
-                        class="text-black">Ödeme adımı</strong></div>
-            </div>
-        </div>
-    </div>
+@include('backend.inc.Breadcrumb')
     <div class="site-section">
         <div class="container">
             <div class="row mb-5">
