@@ -25,6 +25,19 @@ class PageHomeController extends Controller
 
         $specialOffer = specialOffer::where('status','1')->orderByDesc('id')->first();
 
-        return view('frontend.pages.index', compact('sliders','home','about','newProducts','specialOffer'));
+        $seoLists = metaolustur('anasayfa');
+
+        $seo = [
+            'title' => $seoLists['title'],
+            'description' => $seoLists['description'],
+            'keywords' => $seoLists['keywords'],
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seoLists['currenturl'],
+            'canonical' => $seoLists['trpage'],
+            'robots' =>'index,follow',
+        ];
+
+
+        return view('frontend.pages.index', compact('seo','sliders','home','about','newProducts','specialOffer'));
     }
 }

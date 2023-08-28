@@ -24,6 +24,9 @@ class Product extends Model
         'tax_free_price',
         'status',
     ];
+    public function images() {
+        return $this->hasOne(ImageMedia::class, 'table_id','id')->where('model_name','Product');
+    }
     public function category () {
        return $this->hasOne(Category::class,'id','category_id');
     }

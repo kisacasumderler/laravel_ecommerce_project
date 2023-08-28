@@ -19,14 +19,26 @@ class PageController extends Controller
             'active' => 'Hakkımızda'
         ];
 
-        return view('frontend.pages.about', compact('about', 'Breadcrumb'));
+        $seoLists = metaolustur('hakkimizda');
+
+        $seo = [
+            'title' => $seoLists['title'],
+            'description' => $seoLists['description'],
+            'keywords' => $seoLists['keywords'],
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seoLists['currenturl'],
+            'canonical' => $seoLists['trpage'],
+            'robots' =>'index,follow',
+        ];
+
+        return view('frontend.pages.about', compact('seo','about', 'Breadcrumb'));
     }
     public function urundetay($slug)
     {
         $product = Product::where('slug', $slug)->where('status', '1')->firstOrFail();
         $Products = Product::where('id', '!=', $product->id)->where('category_id', $product->category_id)->where('status', '1')->orderBy('id', 'desc')->limit(6)->get();
 
-        $kategori = Category::where('id', $product->category_id)->with('category:id,name,slug')->first();
+           $kategori = Category::where('id', $product->category_id)->with('category:id,name,slug')->first();
 
         $Breadcrumb['active'] = $product->name;
 
@@ -47,7 +59,21 @@ class PageController extends Controller
             ];
         }
 
-        return view('frontend.pages.product', compact('product', 'Products', 'Breadcrumb'));
+        //seo
+
+       $keywords = $kategori->name.','.$kategori->content.','.$product->size.','.$product->name.','.$product->color;
+
+        $seo = [
+            'title' => config('app.name').' | '.$product->name ?? '',
+            'description' => $product->short_text ?? '',
+            'keywords' => $product->keywords ?? '',
+            'image' => asset($product->image),
+            'url' => route('urundetay',$product->slug),
+            'canonical' => route('urundetay',$product->slug),
+            'robots' =>'index,follow',
+        ];
+
+        return view('frontend.pages.product', compact('seo','product', 'Products', 'Breadcrumb'));
     }
     public function urunler(Request $request, $slug = null)
     {
@@ -127,7 +153,21 @@ class PageController extends Controller
         $colors = Product::where('status', '1')->groupBy('color')->pluck('color')->toArray();
 
 
-        return view('frontend.pages.products', compact('Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors'));
+        // seo
+
+        $seoLists = metaolustur($category);
+
+        $seo = [
+            'title' => $seoLists['title'],
+            'description' => $seoLists['description'],
+            'keywords' => $seoLists['keywords'],
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seoLists['currenturl'],
+            'canonical' => $seoLists['trpage'],
+            'robots' =>'index,follow',
+        ];
+
+        return view('frontend.pages.products', compact('seo','Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors'));
     }
 
     public function indirimdekiurunler()
@@ -145,7 +185,20 @@ class PageController extends Controller
             'sayfalar' => [],
             'active' => 'İletişim'
         ];
-        return view('frontend.pages.contact', compact('Breadcrumb'));
+
+        $seoLists = metaolustur('iletisim');
+
+        $seo = [
+            'title' => $seoLists['title'],
+            'description' => $seoLists['description'],
+            'keywords' => $seoLists['keywords'],
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seoLists['currenturl'],
+            'canonical' => $seoLists['trpage'],
+            'robots' =>'index,follow',
+        ];
+
+        return view('frontend.pages.contact', compact('seo','Breadcrumb'));
     }
 
 }
