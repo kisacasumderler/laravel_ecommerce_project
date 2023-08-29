@@ -1,20 +1,22 @@
 @extends('frontend.layout.layout')
 @section('customcss')
-<style>
-    @media(min-width : 720px) {
-        #mobileSlider {
-            display: none;
+    <style>
+        @media(min-width : 720px) {
+            #mobileSlider {
+                display: none;
+            }
         }
-    }
-    @media(max-width : 720px) {
-        #mobileSlider {
-            display: block;
+
+        @media(max-width : 720px) {
+            #mobileSlider {
+                display: block;
+            }
+
+            #desktopSlider {
+                display: none;
+            }
         }
-        #desktopSlider {
-            display: none;
-        }
-    }
-</style>
+    </style>
 @endsection
 @section('content')
     {{-- slider  --}}
@@ -38,11 +40,11 @@
 
                         @if (!empty($slider->images))
                             <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block">
-                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}" class="img-fluid" />
+                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}" alt="{{$images->sortByDesc('vitrin')->first()['alt']}}" class="img-fluid" />
                             </a>
                         @else
                             <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block"><img
-                                    src="{{ asset('images/sliderbg.jpg') }}" alt="" class="img-fluid"></a>
+                                    src="{{ asset('images/sliderbg.jpg') }}" alt="{{$slider->name}}" class="img-fluid"></a>
                             <div class="carousel-caption d-md-block">
                                 <h3>{{ $slider->name }}</h3>
                                 <p>{{ $slider->content }}</p>
@@ -70,7 +72,8 @@
         <div id="mobileSlider" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 @for ($i = 0; $i < $slidersMobile->count(); $i++)
-                    <li data-target="#mobileSlider" data-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}">
+                    <li data-target="#mobileSlider" data-slide-to="{{ $i }}"
+                        class="{{ $i == 0 ? 'active' : '' }}">
                     </li>
                 @endfor
             </ol>
@@ -84,11 +87,13 @@
                     <div class="carousel-item {{ $loop->first == true ? 'active' : '' }}">
                         @if (!empty($item->images))
                             <a href="{{ url($item->link ?? 'urunler') }}" class="d-block">
-                                <img src="{{ asset($mobileImages->sortByDesc('vitrin')->first()['image']) }}" class="img-fluid w-100" />
+                                <img src="{{ asset($mobileImages->sortByDesc('vitrin')->first()['image']) }}"
+                                 alt="{{$mobileImages->sortByDesc('vitrin')->first()['alt']}}"   class="img-fluid w-100" />
                             </a>
                         @else
                             <a href="{{ url($item->link ?? 'urunler') }}" class="d-block">
-                                <img src="{{ asset('images/sliderbgmobile.jpg') }}" alt="" class="img-fluid w-100"></a>
+                                <img src="{{ asset('images/sliderbgmobile.jpg') }}" alt=""
+                                    class="img-fluid w-100"></a>
                             <div class="carousel-caption d-md-block">
                                 <h3>{{ $item->name }}</h3>
                                 <p>{{ $item->content }}</p>
@@ -132,10 +137,14 @@
                 <div class="row">
                     @if (!empty($categories) && $categories->count() > 0)
                         @foreach ($categories->where('cat_ust', null) as $category)
+                            @php
+                                $categoryImage = collect($category->images->data ?? '');
+                            @endphp
                             <div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
                                 <a class="block-2-item" href="{{ route($category->slug . 'urunler') }}">
                                     <figure class="image">
-                                        <img src="{{ asset($category->image) }}" alt="" class="img-fluid">
+                                        <img src="{{ asset($categoryImage->sortByDesc('vitrin')->first()['image'] ?? 'images/resimyok.jpg') }}"
+                                            alt="" class="img-fluid">
                                     </figure>
                                     <div class="text">
                                         <span class="text-uppercase">Giyim</span>
@@ -162,7 +171,23 @@
                             <div class="nonloop-block-3 owl-carousel">
                                 @foreach ($categories->where('cat_ust', null)->where('status', '1') as $category)
                                     @foreach ($category->subCategory->where('status', '1') as $alt_category)
-                                        @isset($alt_category->image)
+                                        @isset($alt_category->images)
+                                            @php
+                                                $subCatImg = collect($alt_category->images->data ?? 'images/resimyok.jpg')->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.jpg';
+                                            @endphp
+                                            <div class="item">
+                                                <div class="block-4 text-center bg-light">
+                                                    <figure class="block-4-image">
+                                                        <a
+                                                            href="{{ route($category->slug . 'urunler', $alt_category->slug) }}">
+                                                            <img src="{{ asset($subCatImg) }}"
+                                                                alt="Image placeholder" class="img-fluid"></a>
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        @endisset
+
+                                        {{-- @isset($alt_category->image)
                                             <div class="item">
                                                 <div class="block-4 text-center bg-light">
                                                     <figure class="block-4-image">
@@ -173,7 +198,7 @@
                                                     </figure>
                                                 </div>
                                             </div>
-                                        @endisset
+                                        @endisset --}}
                                     @endforeach
                                 @endforeach
                             </div>
@@ -195,11 +220,14 @@
                         <div class="col-md-12">
                             <div class="nonloop-block-3 owl-carousel">
                                 @foreach ($newProducts as $Product)
+                                    @php
+                                        $productImage = collect($Product->images->data ?? '');
+                                    @endphp
                                     <div class="item">
                                         <div class="block-4 text-center">
                                             <figure class="block-4-image">
-                                                <img src="{{ asset($Product->image) }}" alt="Image placeholder"
-                                                    class="img-fluid">
+                                                <img src="{{ asset($productImage->sortByDesc('vitrin')->first()['image'] ?? 'images/resimyok.jpg') }}"
+                                                    alt="Image placeholder" class="img-fluid">
                                             </figure>
                                             <div class="block-4-text p-4">
                                                 <h3><a

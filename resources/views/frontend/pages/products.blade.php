@@ -113,10 +113,13 @@
                         <div class="row">
                             @if (!empty($categories) && $categories->count() > 0)
                                 @foreach ($categories->where('cat_ust', null) as $category)
+                                @php
+                                    $categoryImage = collect($category->images->data ?? '')
+                                @endphp
                                     <div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
                                         <a class="block-2-item" href="{{ route($category->slug . 'urunler') }}">
                                             <figure class="image">
-                                                <img src="{{ asset($category->image) }}" alt="" class="img-fluid">
+                                                <img src="{{  asset($categoryImage->sortByDesc('vitrin')->first()['image'] ?? 'images/resimyok.jpg') }}" alt="" class="img-fluid">
                                             </figure>
                                             <div class="text">
                                                 <span class="text-uppercase">Giyim</span>

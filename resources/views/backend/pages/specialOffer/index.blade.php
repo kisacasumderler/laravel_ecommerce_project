@@ -9,10 +9,12 @@
                 <p class="card-description">
                     Kampanya bilgilendirme formu
                 </p>
+                @isset($offer->status)
                 <div class="my-2 d-flex justify-content-end flex-row item" item-id='{{ isset($offer->id) }}'>
                     <input type="checkbox" {{ $offer->status == '1' ? 'checked' : '' }} data-on='Yayından Kaldır'
                         data-off='Yayınla' data-toggle="toggle" class="durum" data-onstyle='danger' data-offstyle='success'>
                 </div>
+                @endisset
                 <form action="{{ route('panel.offer.update') }}" class="forms-sample" method="POST"
                     enctype="multipart/form-data">
                     @csrf

@@ -21,7 +21,7 @@ class PageHomeController extends Controller
         $slidersMobile = SliderMobile::where('status', '1')->with('images')->get();
         $home = 'Anasayfa';
 
-        $newProducts = Product::where('status', '1')->orderByDesc('id')->limit(10)->get();
+        $newProducts = Product::where('status', '1')->with('images')->orderByDesc('id')->limit(10)->get();
 
         $about = About::where('id', '1')->first();
 
@@ -30,10 +30,10 @@ class PageHomeController extends Controller
         $seoLists = metaolustur('anasayfa');
 
         $seo = [
-            'title' => $seoLists['title'] ?? null,
-            'description' => $seoLists['description'] ?? null,
-            'keywords' => $seoLists['keywords'] ?? null,
-            'image' => asset('img/page-bg.jpg') ?? null,
+            'title' => $seoLists['title'] ?? config('app.name').' | Anasayfa',
+            'description' => $seoLists['description'] ?? config('app.name').' | Açıklama',
+            'keywords' => $seoLists['keywords'] ?? config('app.name').', alışveriş, eticaret, kadın, erkek, çocuk,aksesuar, anasayfa',
+            'image' => asset('img/page-bg.jpg'),
             'url' => $seoLists['currenturl'] ?? null,
             'canonical' => $seoLists['trpage'] ?? null,
             'robots' => 'index,follow',

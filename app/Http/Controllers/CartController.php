@@ -14,15 +14,24 @@ class CartController extends Controller
     {
 
         $cartItem = cartItem();
+        $Breadcrumb = [
+            'sayfalar' => [],
+            'active' => 'Sepet'
+        ];
 
-        return view('frontend.pages.cart', compact('cartItem'));
+        return view('frontend.pages.cart', compact('Breadcrumb','cartItem'));
     }
 
     public function sepetform()
     {
         $cartItem = cartItem();
+        $Breadcrumb['active'] = 'Ödeme';
 
-        return view('frontend.pages.cartform', compact('cartItem'));
+        $Breadcrumb['sayfalar'][] = [
+            'link' => route('sepet'),
+            'name' => 'Sepet',
+        ];
+        return view('frontend.pages.cartform', compact('Breadcrumb','cartItem'));
     }
 
     public function add(Request $request)
@@ -43,7 +52,7 @@ class CartController extends Controller
             $cartItem[$productID]['qty'] += $qty;
         } else {
             $cartItem[$productID] = [
-                'image' => $urun->image,
+                'image' => $request->urunImg,
                 'name' => $urun->name,
                 'price' => $urun->price,
                 'qty' => $qty,

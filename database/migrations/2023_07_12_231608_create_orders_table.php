@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('order_no')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('name')->nullable();
-            $table->string('price')->nullable();
-            $table->string('qty')->nullable();
+            $table->integer('price')->nullable();
+            $table->integer('qty')->nullable();
+            $table->integer('kdv')->nullable();
             $table->timestamps();
         });
     }

@@ -2,13 +2,20 @@
 @section('content')
 @include('backend.inc.Breadcrumb')
 
+@php
+$image =
+    collect($about->images->data ?? '')
+        ->sortByDesc('vitrin')
+        ->first()['image'] ?? 'images/resimyok.jpg';
+@endphp
+
     <div class="site-section border-bottom" data-aos="fade">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-md-6">
                     <div class="block-16">
                         <figure>
-                            <img src="{{ asset($about->image) }}" alt="Image placeholder" class="img-fluid rounded">
+                            <img src="{{  asset($image ?? 'images/resimyok.jpg') }}" alt="Image placeholder" class="img-fluid rounded">
                             <a href="https://vimeo.com/channels/staffpicks/93951774" class="play-button popup-vimeo"><span
                                     class="ion-md-play"></span></a>
 

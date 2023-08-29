@@ -13,7 +13,7 @@ class PageController extends Controller
 
     public function hakkimizda()
     {
-        $about = About::where('id', '1')->first();
+        $about = About::where('id', '1')->with('images')->first();
         $Breadcrumb = [
             'sayfalar' => [],
             'active' => 'Hakkımızda'
@@ -22,12 +22,12 @@ class PageController extends Controller
         $seoLists = metaolustur('hakkimizda');
 
         $seo = [
-            'title' => $seoLists['title'],
-            'description' => $seoLists['description'],
-            'keywords' => $seoLists['keywords'],
+            'title' => $seoLists['title'] ?? config('app.name').' Kimdir?',
+            'description' => $seoLists['description'] ?? config('app.name').' Hakkında Bilgi',
+            'keywords' => $seoLists['keywords'] ?? config('app.name').', hakkında, kimdir',
             'image' => asset('img/page-bg.jpg'),
-            'url' => $seoLists['currenturl'],
-            'canonical' => $seoLists['trpage'],
+            'url' => $seoLists['currenturl'] ?? null,
+            'canonical' => $seoLists['trpage'] ?? null,
             'robots' =>'index,follow',
         ];
 
@@ -191,12 +191,12 @@ class PageController extends Controller
         $seoLists = metaolustur('iletisim');
 
         $seo = [
-            'title' => $seoLists['title'],
-            'description' => $seoLists['description'],
-            'keywords' => $seoLists['keywords'],
+            'title' => $seoLists['title'] ?? config('app.name').' | İletişim',
+            'description' => $seoLists['description'] ?? config('app.name').' İletişim sayfası',
+            'keywords' => $seoLists['keywords'] ?? config('app.name').', iletişim, soru, cevap',
             'image' => asset('img/page-bg.jpg'),
-            'url' => $seoLists['currenturl'],
-            'canonical' => $seoLists['trpage'],
+            'url' => $seoLists['currenturl'] ?? null,
+            'canonical' => $seoLists['trpage'] ?? null,
             'robots' =>'index,follow',
         ];
 

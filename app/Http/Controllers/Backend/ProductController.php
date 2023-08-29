@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category:id,cat_ust,name')->with('images')->paginate(20);
+        $products = Product::with('category:id,cat_ust,name')->with('images')->orderByDesc('id')->paginate(20);
 
         return view('backend.pages.product.index', compact('products'));
     }

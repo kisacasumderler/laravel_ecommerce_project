@@ -1,12 +1,19 @@
 @extends('frontend.layout.layout')
 @section('content')
-@include('backend.inc.Breadcrumb')
+    @include('backend.inc.Breadcrumb')
+
+    @php
+        $image =
+            collect($product->images->data ?? '')
+                ->sortByDesc('vitrin')
+                ->first()['image'] ?? 'images/resimyok.jpg';
+    @endphp
 
     <div class="site-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{ asset($product->image ?? 'images/cloth_1.jpg') }}" alt="Image" class="img-fluid">
+                    <img src="{{ asset($image ?? 'images/resimyok.jpg') }}" alt="Image" class="img-fluid">
                 </div>
                 <div class="col-md-6">
                     <h2 class="text-black">{{ $product->name ?? '' }}</h2>
@@ -15,6 +22,7 @@
                     <form action="{{ route('sepet.add') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="urunImg" value="{{$image ?? 'images/resimyok.jpg'}}">
                         <div class="mb-1 d-flex">
                             <label for="product{{ $product->id }}" class="d-flex mr-3 mb-3">
                                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input
@@ -54,10 +62,16 @@
                     <div class="col-md-12">
                         <div class="nonloop-block-3 owl-carousel">
                             @foreach ($Products as $product)
+                                @php
+                                    $images =
+                                        collect($product->images->data ?? '')
+                                            ->sortByDesc('vitrin')
+                                            ->first()['image'] ?? 'images/resimyok.jpg';
+                                @endphp
                                 <div class="item">
                                     <div class="block-4 text-center">
                                         <figure class="block-4-image">
-                                            <img src="{{ asset($product->image) }}" alt="Image placeholder"
+                                            <img src="{{ asset($images ?? 'images/resimyok.jpg') }}" alt="Image placeholder"
                                                 class="img-fluid">
                                         </figure>
                                         <div class="block-4-text p-4">
@@ -81,7 +95,7 @@
 @section('customjs')
     <script>
         @if (session()->get('success'))
-            alertify.success('{{ session()->get("success") }}');
+            alertify.success('{{ session()->get('success') }}');
         @endif
     </script>
 @endsection
