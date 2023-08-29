@@ -56,11 +56,29 @@
                     </div>
                     <div class="form-row align-items-end">
                         <div class="col">
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <p>Ana Kategori (900x1182), Alt Kategori (800,350) </p>
                                 <img src="{{ asset($category->image ?? 'images/resimyok.jpg') }}" alt=""
                                     class="img-fluid">
-                            </div>
+                            </div> --}}
+                            <div class="col-lg-12 d-flex images">
+                                @if (isset($category) && !empty($category->images->data))
+                                @php
+                                $images = collect($category->images->data ?? '');
+                                @endphp
+                                @foreach ($images->sortByDesc('vitrin') as $item)
+                                <div class="item mx-4" data-id="{{$category->id}}" data-model="Category" data-image_no="{{$item['image_no']}}">
+                                    <img src="{{asset($item['image'])}}" class="img-thumbnail">
+                                    <button type="button" class="deleteImage btn btn-sm btn-danger btn btn-sm btn-danger d-flex align-items-center px-2 mt-3">X</button>
+                                    <div class="mt-4">
+                                        <label class="d-block">
+                                            <input class="radio_animated vitrinBtn" type="radio" {{$item['vitrin'] == 1 ? 'checked' : ''}}  >Vitrin Yap
+                                        </label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                           </div>
                             <div class="form-group">
                                 <label>File upload</label>
                                 @error('image')

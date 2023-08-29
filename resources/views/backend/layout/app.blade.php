@@ -118,6 +118,74 @@
         @endif
     </script>
     @yield('customjs')
+    <script>
+        alertify.set('notifier','position', 'top-right');
+       $(document).on("click",".deleteImage",function(e) {
+                  e.preventDefault();
+                  $this = $(this);
+                  let model = $.trim($(this).closest('.item').attr('data-model'));
+                  let image_id = $.trim($(this).closest('.item').attr('data-image_no'));
+                  let id = $.trim($(this).closest('.item').attr('data-id'));
+                  alertify.confirm('Bu Veri Silinecek', 'Onayladıktan sonra geri alınamaz. Emin misiniz?', function(){
+
+                      $.ajax({
+                          type:'DELETE',
+                          url: "{{route('panel.image.resimsil')}}",
+                          headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+                          data: {
+                              id:id,
+                              image_id:image_id,
+                              model:model
+                          },
+                          headers: {
+                              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                          },
+                          success:function(response) {
+                              $this.closest('.item').remove();
+                              alertify.success('Başarıyla Silindi');
+                          }
+                      });
+
+                  }, function(){
+                   alertify.error('Silme İşlemi İptal Edildi');
+                  }).set('labels', {
+                      ok:'Onayla',
+                      cancel:'İptal'
+                  });
+              });
+
+              $(document).on('change', '.vitrinBtn', function(){
+                       $('.vitrinBtn').prop('checked',false);
+                       $(this).prop('checked',true);
+                       let model = $.trim($(this).closest('.item').attr('data-model'));
+                       let image_id = $.trim($(this).closest('.item').attr('data-image_no'));
+                       let id = $.trim($(this).closest('.item').attr('data-id'));
+                       $.ajax({
+                           url:  "{{route('panel.vitrin.yap')}}",
+                           type: 'POST',
+                           headers: {
+                               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                           },
+                           data:{
+                               id:id,
+                               model:model,
+                               image_id:image_id,
+                           },
+                           beforeSend: function() {
+
+                           },
+                           success: function (response) {
+                               alertify.success('Başarıyla Vitrin Güncellendi');
+                           },
+                           complete: function() {
+
+                           },
+                           error: function (data) {
+
+                           }
+                       });
+               });
+       </script>
     <!-- End custom js for this page-->
 </body>
 

@@ -109,11 +109,25 @@
                     </div>
                     <div class="form-row align-items-end">
                         <div class="col">
-                            <div class="form-group">
-                                <p>Görsel (1200x1000) </p>
-                                <img src="{{ asset($product->image ?? 'images/resimyok.jpg') }}" alt=""
-                                    class="img-fluid">
-                            </div>
+                            <div class="col-lg-12 d-flex images">
+                                @if (isset($product) && !empty($product->images->data))
+                                @php
+                                $images = collect($product->images->data ?? '');
+                                @endphp
+                                @foreach ($images->sortByDesc('vitrin') as $item)
+                                <div class="item mx-4" data-id="{{$product->id}}" data-model="Product" data-image_no="{{$item['image_no']}}">
+                                    <img src="{{asset($item['image'])}}" class="img-thumbnail">
+                                    <button type="button" class="deleteImage btn btn-sm btn-danger btn btn-sm btn-danger d-flex align-items-center px-2 mt-3">X</button>
+                                    <div class="mt-4">
+                                        <label class="d-block">
+                                            <input class="radio_animated vitrinBtn" type="radio" {{$item['vitrin'] == 1 ? 'checked' : ''}}  >Vitrin Yap
+                                        </label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                           </div>
+
                             <div class="form-group">
                                 <label>File upload</label>
                                 <input type="file" name="image" class="file-upload-default">

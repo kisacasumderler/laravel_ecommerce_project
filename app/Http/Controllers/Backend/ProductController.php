@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $products = Product::with('category:id,cat_ust,name')->paginate(20);
@@ -22,37 +17,19 @@ class ProductController extends Controller
         return view('backend.pages.product.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
 
-        $categories = Category::where('status', '1')->get();
+        $categories = Category::where('status', '1')->with('images')->get();
         return view('backend.pages.product.edit', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(ProductRequest $request)
     {
 
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $yol = 'images\product\\';
-            $dosyaTamad = resimyukle($image, 1200, 900, $yol);
-        }
-
-        Product::create(
+        $product = Product::create(
             [
-                'image' => $dosyaTamad ?? null,
                 'category_id' => $request->category_id,
                 'name' => $request->name,
                 'price' => ($request->tax_free_price + kdvHesapla($request->tax_free_price, $request->kdv)),
@@ -67,26 +44,13 @@ class ProductController extends Controller
             ]
         );
 
+        if($request->hasFile('image')) {
+            $this->fileSave('Product','product',$request,$product);
+        }
+
         return back()->withSuccess('Başarıyla Oluşturuldu');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $product = Product::where('id', $id)->first();
@@ -94,31 +58,14 @@ class ProductController extends Controller
         return view('backend.pages.product.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(ProductRequest $request, $id)
     {
 
         $query = Product::where('id', $request->id);
         $product = $query->firstOrfail();
-        $fileName = $query->first()->image ?? null;
-
-
-        if ($request->hasFile('image')) {
-            dosyasil($product->image);
-            $image = $request->file('image');
-            $yol = 'images\product\\';
-            $dosyaTamad = resimyukle($image, 1200, 900, $yol);
-        }
 
         Product::where('id', $id)->update(
             [
-                'image' => $dosyaTamad ?? $fileName,
                 'category_id' => $request->category_id,
                 'name' => $request->name,
                 'price' => ($request->tax_free_price + kdvHesapla($request->tax_free_price, $request->kdv)),
@@ -133,15 +80,13 @@ class ProductController extends Controller
             ]
         );
 
+        if($request->hasFile('image')) {
+            $this->fileSave('Product','product',$request,$product);
+        }
+
         return back()->withSuccess('Başarıyla Güncellendi');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
 

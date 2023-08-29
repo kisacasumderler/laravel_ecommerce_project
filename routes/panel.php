@@ -3,6 +3,7 @@ use App\Http\Controllers\Backend\AboutController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ContactController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\ImageUploadController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\SettingController;
@@ -66,6 +67,10 @@ Route::group(['middleware' => ['panelsetting','auth'],'prefix'=>'panel','as'=>'p
     Route::put('/order/{id}/update',[OrderController::class,'update'])->name('order.update');
     Route::delete('/order/destroy', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::post('/order-durum/status/update', [OrderController::class, 'statusUpdate'])->name('order.status');
+
+
+    Route::post('/image-gorsel/vitrin', [ImageUploadController::class,'vitrin'])->name('vitrin.yap');
+    Route::delete('/image-gorsel/destroy', [ImageUploadController::class,'destroy'])->name('image.resimsil');
 });
 
 ?>

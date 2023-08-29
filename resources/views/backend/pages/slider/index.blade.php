@@ -37,7 +37,10 @@
                                     @foreach ($sliders as $slider)
                                         <tr class="item" item-id='{{ $slider->id }}'>
                                             <td class="py-1">
-                                                <img src="{{ asset($slider->image) }}" alt="image" />
+                                                @php
+                                                $images = collect($slider->images->data ?? '');
+                                                @endphp
+                                                <img src="{{asset($images->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}" />
                                             </td>
                                             <td class="text-wrap">
                                                 {{ $slider->name }}

@@ -79,6 +79,14 @@ if (!function_exists('dosyaizin')) {
     }
 }
 
+if (!function_exists('klasorac')) {
+    function klasorac($dosyayol, $izinler = 0777) {
+        if (!file_exists($dosyayol)) {
+            mkdir($dosyayol, $izinler, true);
+        }
+    }
+}
+
 
 if (!function_exists('resimyukle')) {
     function resimyukle($image, $x, $y, $yol)
@@ -187,6 +195,54 @@ if (!function_exists('metaolustur')) {
     }
 }
 
+if (!function_exists('uploadimage')) {
+    function uploadimage($image,$pathyol,$paththumb=NULL,$with=NULL,$height=NULL)
+    {
+
+        $fullName = $image->getClientOriginalName();
+        $extension = $image->getClientOriginalExtension();
+        $onlyName = implode('', explode('.' . $extension, $fullName));
+        $filename =  Str::slug($onlyName) . '-' . time(); //generateOTP(6).'-'.time();
+
+        if ($image->extension() == 'svg' || $image->extension() == 'webp' || $image->extension() == 'pdf' || $image->extension() == 'ico') {
+            $orjinalurl = $pathyol . $filename . '.' . $image->extension();
+
+
+            \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('',$image->path(), $orjinalurl);
+
+            $imagear['orj'] = $orjinalurl;
+
+            if(!empty($paththumb)) {
+                $thumbnailurl = $orjinalurl;
+                $imagear['thum'] = $thumbnailurl;
+            }else {
+                $imagear['thum'] = NULL;
+            }
+
+        } else {
+            $orjinalurl = $pathyol . $filename . '.webp';
+            \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, \ImageResize::make($image->path())->encode('webp', 90));
+
+            $imagear['orj'] = $orjinalurl;
+
+            if(!empty($paththumb)) {
+
+                $thumbnailurl = $paththumb . 'thumb_' . $filename . '.webp';
+                \Illuminate\Support\Facades\Storage::disk('public')->put($thumbnailurl, \ImageResize::make($image->path())
+                ->resize($with, $height, function ($constraint) {$constraint->aspectRatio();})
+                ->encode('webp', 90));
+
+                $imagear['thum'] = $thumbnailurl;
+            }else {
+                $imagear['thum'] = NULL;
+            }
+
+
+        }
+
+        return  $imagear;
+    }
+}
 
 
 

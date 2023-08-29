@@ -49,6 +49,7 @@
     <link rel="stylesheet" href="{{ asset('backend/css/alertify.min.css') }}">
     <link rel="icon" href="{{ asset('/images/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+    @yield('customcss')
 </head>
 
 <body>

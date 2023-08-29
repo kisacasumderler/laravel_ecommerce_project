@@ -11,24 +11,18 @@ class AboutController extends Controller
 {
     public function index()
     {
-        $about = About::where('id',1)->first();
+        $about = About::where('id',1)->with('images')->first();
 
         return view('backend.pages.about.index',compact('about'));
     }
     public function update(AboutRequest $request)
     {
         $id = 1;
-        $fileName = About::Where('id',$id)->first()->image ?? null;
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $yol = 'images\about\\';
-            $dosyaTamad = resimyukle($image, 900, 600, $yol);
-        }
+        $about = About::where('id',$id)->first();
 
         About::updateOrCreate(['id'=>$id],[
             'name'=>Guvenlik($request->name),
-            'image'=>$dosyaTamad ?? $fileName,
             'content'=>htmlspecialchars($request->content),
             'text_1'=>Guvenlik($request->text_1),
             'text_1_icon'=>Guvenlik($request->text_1_icon),
@@ -40,6 +34,12 @@ class AboutController extends Controller
             'text_3_icon'=>Guvenlik($request->text_3_icon),
             'text_3_content'=>Guvenlik($request->text_3_content),
         ]);
+
+
+        if($request->hasFile('image')) {
+            $this->fileSave('About','about',$request,$about);
+        }
+
         return back()->withSuccess('Başarıyla Güncellendi!');
     }
 }

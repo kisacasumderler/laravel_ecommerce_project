@@ -22,29 +22,23 @@ class CategoryController extends Controller
     }
     public function create()
     {
-
         $categories = Category::where('status', '1')->get();
         return view('backend.pages.category.edit', compact('categories'));
     }
     public function store(CategoryRequest $request)
     {
-
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $yol = 'images\category\\';
-            $dosyaTamad = resimyukle($image, 800, 950, $yol);
-        }
-
-        Category::create(
+       $category = Category::create(
             [
-                'image' => $dosyaTamad ?? null,
                 'cat_ust' => Guvenlik($request->cat_ust),
                 'name' => Guvenlik($request->name),
                 'content' => Guvenlik($request->content),
                 'status' => Guvenlik($request->status),
             ]
         );
+
+        if($request->hasFile('image')) {
+            $this->fileSave('Category','kategori',$request,$category);
+        }
 
         return back()->withSuccess('Başarıyla Oluşturuldu');
     }
@@ -54,7 +48,7 @@ class CategoryController extends Controller
     }
     public function edit($id)
     {
-        $category = Category::where('id', $id)->first();
+        $category = Category::where('id', $id)->with('images')->first();
         $categories = Category::where('status', '1')->get();
         return view('backend.pages.category.edit', compact('category', 'categories'));
     }
@@ -63,36 +57,40 @@ class CategoryController extends Controller
 
         $query = Category::where('id', $request->id);
         $category = $query->firstOrfail();
-        $fileName = $query->first()->image ?? null;
+        // $fileName = $query->first()->image ?? null;
 
 
-        if ($request->cat_ust == null ) {
-            if ($request->hasFile('image')) {
-                dosyasil($category->image);
-                $image = $request->file('image');
-                $yol = 'images\category\\';
-                $dosyaTamad = resimyukle($image, 900, 1182, $yol);
-            }
-        } else {
-            if ($request->hasFile('image')) {
-                dosyasil($category->image);
-                if ($request->hasFile('image')) {
-                    $image = $request->file('image');
-                    $yol = 'images\category\\';
-                    $dosyaTamad = resimyukle($image, 800, 950, $yol);
-                }
-            }
-        }
+        // if ($request->cat_ust == null ) {
+        //     if ($request->hasFile('image')) {
+        //         dosyasil($category->image);
+        //         $image = $request->file('image');
+        //         $yol = 'images\category\\';
+        //         $dosyaTamad = resimyukle($image, 900, 1182, $yol);
+        //     }
+        // } else {
+        //     if ($request->hasFile('image')) {
+        //         dosyasil($category->image);
+        //         if ($request->hasFile('image')) {
+        //             $image = $request->file('image');
+        //             $yol = 'images\category\\';
+        //             $dosyaTamad = resimyukle($image, 800, 950, $yol);
+        //         }
+        //     }
+        // }
 
-        Category::where('id', $id)->update(
+        $category->update(
             [
-                'image' => $dosyaTamad ?? $fileName,
+                // 'image' => $dosyaTamad ?? $fileName,
                 'cat_ust' => Guvenlik($request->cat_ust),
                 'name' => Guvenlik($request->name),
                 'content' => Guvenlik($request->content),
                 'status' => Guvenlik($request->status),
             ]
         );
+
+        if($request->hasFile('image')) {
+            $this->fileSave('Category','kategori',$request,$category);
+        }
 
         return back()->withSuccess('Başarıyla Güncellendi');
     }
