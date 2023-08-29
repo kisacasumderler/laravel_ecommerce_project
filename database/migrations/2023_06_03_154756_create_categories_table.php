@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->string('image')->nullable();
             $table->text('content')->nullable();
             $table->integer('cat_ust')->nullable();
             $table->enum('status',['0','1'])->default('1');

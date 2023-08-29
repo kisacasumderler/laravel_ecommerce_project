@@ -10,7 +10,6 @@ class Product extends Model
 {
     use Sluggable,HasFactory;
     protected $fillable = [
-        'image',
         'name',
         'slug',
         'category_id',

@@ -17,7 +17,6 @@ class AboutSeeder extends Seeder
     {
         About::create([
             'name'=>'Moda Trendlerinde Yön Veren UtkuShop: Alışverişinizi Şıklaştırın!',
-            'image'=>'images/blog_1.jpg',
             'content'=>'
             <p>UtkuShop, 2023 yılında kurulan yenilikçi bir online alışveriş platformudur. Amacımız, müşterilerimize modanın en yeni ve şık ürünlerini sunarak alışveriş deneyimlerini en üst düzeyde geliştirmektir. Ayakkabı, saat ve aksesuar gibi moda ürünlerinin geniş bir yelpazesine sahibiz.</p>
 

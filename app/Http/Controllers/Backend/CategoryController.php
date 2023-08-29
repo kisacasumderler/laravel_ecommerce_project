@@ -6,18 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\File;
-
 
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('category:id,cat_ust,name')->get();
-
+        $categories = Category::with('category:id,cat_ust,name')->with('images')->get();
         return view('backend.pages.category.index', compact('categories'));
     }
     public function create()
@@ -42,10 +37,6 @@ class CategoryController extends Controller
 
         return back()->withSuccess('Başarıyla Oluşturuldu');
     }
-    public function show($id)
-    {
-        //
-    }
     public function edit($id)
     {
         $category = Category::where('id', $id)->with('images')->first();
@@ -57,30 +48,8 @@ class CategoryController extends Controller
 
         $query = Category::where('id', $request->id);
         $category = $query->firstOrfail();
-        // $fileName = $query->first()->image ?? null;
-
-
-        // if ($request->cat_ust == null ) {
-        //     if ($request->hasFile('image')) {
-        //         dosyasil($category->image);
-        //         $image = $request->file('image');
-        //         $yol = 'images\category\\';
-        //         $dosyaTamad = resimyukle($image, 900, 1182, $yol);
-        //     }
-        // } else {
-        //     if ($request->hasFile('image')) {
-        //         dosyasil($category->image);
-        //         if ($request->hasFile('image')) {
-        //             $image = $request->file('image');
-        //             $yol = 'images\category\\';
-        //             $dosyaTamad = resimyukle($image, 800, 950, $yol);
-        //         }
-        //     }
-        // }
-
         $category->update(
             [
-                // 'image' => $dosyaTamad ?? $fileName,
                 'cat_ust' => Guvenlik($request->cat_ust),
                 'name' => Guvenlik($request->name),
                 'content' => Guvenlik($request->content),

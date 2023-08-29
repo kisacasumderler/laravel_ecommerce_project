@@ -21,7 +21,6 @@ class ProductFactory extends Factory
         $color = ['Beyaz','Siyah','Kırmızı','Kahverengi','Yeşil','Mor'];
 
         return [
-            'image'=>'images/cloth_'.fake()->numberBetween(1,10).'.jpg',
             'name'=>fake()->text(20),
             'category_id'=>$categoryId[random_int(0,8)],
             'price'=>fake()->numberBetween(95,999),

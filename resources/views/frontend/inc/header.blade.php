@@ -62,13 +62,8 @@
                         @endif
                     </ul>
                 </li>
-                <li class="has-children">
+                <li>
                     <a href="{{ route('urunler') }}">Ürünler</a>
-                    <ul class="dropdown">
-                        <li><a href="#">Menu One</a></li>
-                        <li><a href="#">Menu Two</a></li>
-                        <li><a href="#">Menu Three</a></li>
-                    </ul>
                 </li>
                 <li><a href="{{ route('hakkimizda') }}">Hakkımızda</a></li>
                 <li><a href="{{ route('iletisim') }}">İletişim</a></li>

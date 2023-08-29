@@ -12,8 +12,6 @@ class Slider extends Model
         'name',
         'content',
         'link',
-        'image',
-        'MobileImage',
         'status',
     ];
 

@@ -9,7 +9,6 @@ class About extends Model
 {
     protected $fillable = [
         'name',
-        'image',
         'content',
         'text_1',
         'text_1_icon',

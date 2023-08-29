@@ -119,7 +119,7 @@ class PageController extends Controller
             $Breadcrumb['active'] = $anakategori->name . ' ' . $altkategori->name;
         }
 
-        $products = Product::where('status', '1')->select(['id', 'name', 'slug', 'size', 'color', 'price', 'image', 'category_id', 'short_text'])
+        $products = Product::where('status', '1')->select(['id', 'name', 'slug', 'size', 'color', 'price', 'category_id', 'short_text'])
             ->where(
                 function ($q) use ($size, $color, $start_price, $end_price) {
                     if (!empty($size)) {
@@ -141,7 +141,9 @@ class PageController extends Controller
                     $q->where('slug', $slug);
                 }
                 return $q;
-            })->orderBy($order, $sort)->paginate(21);
+            })->orderBy($order, $sort)
+            ->with('images')
+            ->paginate(21);
 
         if ($request->ajax()) {
             $view = view('frontend.ajax.productList', compact('products'))->render();
@@ -158,12 +160,12 @@ class PageController extends Controller
         $seoLists = metaolustur($category);
 
         $seo = [
-            'title' => $seoLists['title'],
-            'description' => $seoLists['description'],
-            'keywords' => $seoLists['keywords'],
+            'title' => $seoLists['title'] ?? config('app.name').' | Ürünler',
+            'description' => $seoLists['description'] ?? config('app.name').' | Ürünler Açıklama',
+            'keywords' => $seoLists['keywords'] ?? config('app.name').', kadın, erkek, çocuk, giyim, ayakkabı, çanta, aksesuar',
             'image' => asset('img/page-bg.jpg'),
-            'url' => $seoLists['currenturl'],
-            'canonical' => $seoLists['trpage'],
+            'url' => $seoLists['currenturl'] ?? null,
+            'canonical' => $seoLists['trpage'] ?? null,
             'robots' =>'index,follow',
         ];
 

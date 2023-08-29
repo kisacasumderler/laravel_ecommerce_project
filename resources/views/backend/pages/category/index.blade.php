@@ -32,9 +32,15 @@
                             <tbody>
                                 @if (!empty($categories) && $categories->count() > 0)
                                     @foreach ($categories as $category)
+                                        @php
+                                            $images =
+                                                collect($category->images->data ?? '')
+                                                    ->sortByDesc('vitrin')
+                                                    ->first()['image'] ?? 'images/resimyok.jpg';
+                                        @endphp
                                         <tr class="item" item-id='{{ $category->id }}'>
                                             <td class="py-1">
-                                                <img src="{{ asset($category->image) }}" alt="image" />
+                                                <img src="{{ asset($images ?? 'images/resimyok.jpg') }}" alt="image" />
                                             </td>
                                             <td class="text-wrap">
                                                 {{ $category->name }}
@@ -45,9 +51,10 @@
                                             <td>
                                                 <div>
                                                     <label>
-                                                        <input type="checkbox" {{ $category->status == '1' ? 'checked' : '' }}
-                                                            data-on='Aktif' data-off='Pasif' data-toggle="toggle"
-                                                            class="durum" data-onstyle='success' data-offstyle='danger'>
+                                                        <input type="checkbox"
+                                                            {{ $category->status == '1' ? 'checked' : '' }} data-on='Aktif'
+                                                            data-off='Pasif' data-toggle="toggle" class="durum"
+                                                            data-onstyle='success' data-offstyle='danger'>
                                                     </label>
                                                 </div>
                                             </td>
@@ -98,31 +105,34 @@
             e.preventDefault();
 
             let item = $(this).closest('.item'),
-            id = item.attr('item-id');
+                id = item.attr('item-id');
 
 
-            alertify.confirm('category Kaldır', 'category ile ilgili tüm veriler kaldırılacaktır. Silmek istediğinizden emin misiniz?', function() {
-                $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            alertify.confirm('category Kaldır',
+                'category ile ilgili tüm veriler kaldırılacaktır. Silmek istediğinizden emin misiniz?',
+                function() {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "DELETE",
+                        url: `{{ route('panel.category.destroy') }}`,
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            if (response.error == false) {
+                                item.remove();
+                                toastr.success(response.message);
+                            } else {
+                                toastr.error("işlem sırasında hata alınmaktadır.");
+                            }
+                        }
+                    })
                 },
-                type: "DELETE",
-                url: `{{ route('panel.category.destroy') }}`,
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    if (response.error == false) {
-                        item.remove();
-                        toastr.success(response.message);
-                    }else {
-                        toastr.error("işlem sırasında hata alınmaktadır.");
-                    }
-                }
-            })
-            }, function() {
-                toastr.error('Cancel')
-            });
+                function() {
+                    toastr.error('Cancel')
+                });
 
 
         })

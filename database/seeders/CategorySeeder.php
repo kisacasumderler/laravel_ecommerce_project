@@ -17,14 +17,12 @@ class CategorySeeder extends Seeder
     {
         $erkek = Category::create([
             'name'=>'Erkek',
-            'image'=>'images/men.jpg',
             'content'=>'Erkek Giyim',
             'cat_ust'=>null,
             'status'=>'1',
         ]);
         Category::create([
             'name'=>'Kazak',
-            'image'=>null,
             'content'=>null,
             'cat_ust'=>$erkek->id,
             'status'=>'1',
@@ -32,7 +30,6 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'name'=>'Pantolon',
-            'image'=>null,
             'content'=>null,
             'cat_ust'=>$erkek->id,
             'status'=>'1',
@@ -40,7 +37,6 @@ class CategorySeeder extends Seeder
 
         $kadin = Category::create([
             'name'=>'Kadın',
-            'image'=>'images/women.jpg',
             'content'=>'Kadın Giyim',
             'cat_ust'=>null,
             'status'=>'1',
@@ -48,7 +44,6 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'name'=>'tişört',
-            'image'=>null,
             'content'=>null,
             'cat_ust'=>$kadin->id,
             'status'=>'1',
@@ -56,7 +51,6 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'name'=>'Çanta',
-            'image'=>null,
             'content'=>null,
             'cat_ust'=>$kadin->id,
             'status'=>'1',
@@ -64,7 +58,6 @@ class CategorySeeder extends Seeder
 
         $cocuk = Category::create([
             'name'=>'Çocuk',
-            'image'=>'images/children.jpg',
             'content'=>'Çocuk Giyim',
             'cat_ust'=>null,
             'status'=>'1',
@@ -72,7 +65,6 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'name'=>'ayakkabı',
-            'image'=>null,
             'content'=>null,
             'cat_ust'=>$cocuk->id,
             'status'=>'1',

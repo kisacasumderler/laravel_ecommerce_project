@@ -16,8 +16,6 @@ class SliderSeeder extends Seeder
     public function run()
     {
         Slider::create([
-            'image'=>'images/hero_1.jpg',
-            'MobileImage'=>'images/mobile_slider.jpg',
             'name'=>'Stilinizi Yansıtan Ayakkabıları Keşfedin',
             'content'=>'Ayakkabılarınızla tarzınızı yansıtın! Alışveriş sayfamızda en yeni trendleri keşfedin ve stilinizi tamamlayacak ayakkabıları bulun.',
             'link'=>'urunler',

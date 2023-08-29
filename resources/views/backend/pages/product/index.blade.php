@@ -1,8 +1,8 @@
 @extends('backend.layout.app')
 @section('content')
-<div class="form-group">
-    <input type="text" class="form-control" id="myInput" placeholder="tabloda ara">
-</div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="myInput" placeholder="tabloda ara">
+    </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -38,9 +38,15 @@
                             <tbody id="myTable">
                                 @if (!empty($products) && $products->count() > 0)
                                     @foreach ($products as $product)
+                                        @php
+                                            $images =
+                                                collect($product->images->data ?? '')
+                                                    ->sortByDesc('vitrin')
+                                                    ->first()['image'] ?? 'images/resimyok.jpg';
+                                        @endphp
                                         <tr class="item" item-id='{{ $product->id }}'>
                                             <td class="py-1">
-                                                <img src="{{ asset($product->image) }}" alt="image" />
+                                                <img src="{{ asset($images ?? 'images/resimyok.jpg') }}" alt="image" />
                                             </td>
                                             <td class="text-wrap">
                                                 {{ $product->name }}

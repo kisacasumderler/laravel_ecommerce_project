@@ -16,7 +16,6 @@ class ProductSeeder extends Seeder
     public function run()
     {
         Product::create([
-            'image' => 'images/cloth_1.jpg',
             'name' => 'Tank Top Tişört',
             'category_id' => 4,
             'price' => 80,
@@ -28,7 +27,6 @@ class ProductSeeder extends Seeder
             'status' => '1',
         ]);
         Product::create([
-            'image' => 'images/cloth_2.jpg',
             'name' => 'Beyaz Erkek Tişört',
             'category_id' => 1,
             'price' => 105,
@@ -40,7 +38,6 @@ class ProductSeeder extends Seeder
             'status' => '1',
         ]);
         Product::create([
-            'image' => 'images/cloth_3.jpg',
             'name' => 'Mavi Erkek Tişört',
             'category_id' => 1,
             'price' => 95,
