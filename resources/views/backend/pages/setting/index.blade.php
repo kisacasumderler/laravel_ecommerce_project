@@ -27,8 +27,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (!empty($settings) && $settings->count() > 0)
-                                    @foreach ($settings as $setting)
+                                @if (!empty($sets) && $sets->count() > 0)
+                                    @foreach ($sets as $setting)
                                         <tr class="item" item-id='{{ $setting->id }}'>
                                             <td class="py-1">
                                                 @if ($setting->set_type == 'image')

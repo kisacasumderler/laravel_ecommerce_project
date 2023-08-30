@@ -10,8 +10,8 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $settings = SiteSetting::get();
-        return view('backend.pages.setting.index', compact('settings'));
+        $sets = SiteSetting::get();
+        return view('backend.pages.setting.index', compact('sets'));
 
     }
     public function create()

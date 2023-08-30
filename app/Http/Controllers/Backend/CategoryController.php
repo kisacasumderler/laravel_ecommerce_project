@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\ImageMedia;
 use Illuminate\Http\Request;
 
 
@@ -67,8 +68,15 @@ class CategoryController extends Controller
     {
 
         $category = Category::where('id', $request->id)->firstOrfail();
-        dosyasil($category->image);
-        dosyasil($category->MobileImage);
+
+        $imageMedia = ImageMedia::where('model_name', 'Category')->where('table_id', $category->id)->first();
+
+        if (!empty($imageMedia->data)) {
+            foreach ($imageMedia->data as $img) {
+                dosyasil($img['image']);
+            }
+            $imageMedia->delete();
+        }
 
         $category->delete();
         return response(['error' => false, 'message' => 'Başarıyla Silindi.']);

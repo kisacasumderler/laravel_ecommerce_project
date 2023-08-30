@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
+use App\Models\ImageMedia;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -91,8 +92,15 @@ class ProductController extends Controller
     {
 
         $product = Product::where('id', $request->id)->firstOrfail();
-        dosyasil($product->image);
-        dosyasil($product->MobileImage);
+
+        $imageMedia = ImageMedia::where('model_name', 'Product')->where('table_id', $product->id)->first();
+
+        if (!empty($imageMedia->data)) {
+            foreach ($imageMedia->data as $img) {
+                dosyasil($img['image']);
+            }
+            $imageMedia->delete();
+        }
 
         $product->delete();
         return response(['error' => false, 'message' => 'Başarıyla Silindi.']);

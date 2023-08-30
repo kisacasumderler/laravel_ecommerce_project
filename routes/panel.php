@@ -3,8 +3,10 @@ use App\Http\Controllers\Backend\AboutController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ContactController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\ImageSeoController;
 use App\Http\Controllers\Backend\ImageUploadController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\PageSeoController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\SliderController;
@@ -67,6 +69,18 @@ Route::group(['middleware' => ['panelsetting','auth'],'prefix'=>'panel','as'=>'p
     Route::put('/order/{id}/update',[OrderController::class,'update'])->name('order.update');
     Route::delete('/order/destroy', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::post('/order-durum/status/update', [OrderController::class, 'statusUpdate'])->name('order.status');
+
+    Route::get('/pageseo', [PageSeoController::class,'index'])->name('pageseo.index');
+    Route::get('/pageseo/create', [PageSeoController::class,'create'])->name('pageseo.create');
+    Route::post('/pageseo/store', [PageSeoController::class,'store'])->name('pageseo.store');
+    Route::get('/pageseo/{id}/edit', [PageSeoController::class,'edit'])->name('pageseo.edit');
+    Route::put('/pageseo/{id}/update', [PageSeoController::class,'update'])->name('pageseo.update');
+    Route::delete('/pageseo/destroy', [PageSeoController::class,'destroy'])->name('pageseo.destroy');
+
+
+    Route::get('/imageseo', [ImageSeoController::class,'index'])->name('imageseo.index');
+    Route::delete('/imageseo/destroy', [ImageSeoController::class,'destroy'])->name('imageseo.destroy');
+    Route::post('/imageseo/update', [ImageSeoController::class,'update'])->name('imageseo.update');
 
 
     Route::post('/image-gorsel/vitrin', [ImageUploadController::class,'vitrin'])->name('vitrin.yap');

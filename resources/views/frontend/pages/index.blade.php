@@ -37,14 +37,13 @@
                         @endphp
                     @endif
                     <div class="carousel-item {{ $loop->first == true ? 'active' : '' }}">
-
                         @if (!empty($slider->images))
-                            <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block">
-                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}" alt="{{$images->sortByDesc('vitrin')->first()['alt']}}" class="img-fluid" />
+                            <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block w-100">
+                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}" alt="{{$images->sortByDesc('vitrin')->first()['alt']}}" class="img-fluid w-100" />
                             </a>
                         @else
-                            <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block"><img
-                                    src="{{ asset('images/sliderbg.jpg') }}" alt="{{$slider->name}}" class="img-fluid"></a>
+                            <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block w-100"><img
+                                    src="{{ asset('images/sliderbg.jpg') }}" alt="{{$slider->name}}" class="img-fluid w-100"></a>
                             <div class="carousel-caption d-md-block">
                                 <h3>{{ $slider->name }}</h3>
                                 <p>{{ $slider->content }}</p>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SliderRequest;
+use App\Models\ImageMedia;
 use App\Models\Slider;
 use App\Models\SliderMobile;
 use Illuminate\Http\Request;
@@ -15,11 +16,6 @@ use Illuminate\Support\Facades\File;
 
 class SliderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $sliders = Slider::with('images')->get();
@@ -94,8 +90,15 @@ class SliderController extends Controller
     {
 
         $slider = Slider::where('id', $request->id)->firstOrfail();
-        dosyasil($slider->image);
-        dosyasil($slider->MobileImage);
+
+        $imageMedia = ImageMedia::where('model_name', 'Slider')->where('table_id', $slider->id)->first();
+
+        if (!empty($imageMedia->data)) {
+            foreach ($imageMedia->data as $img) {
+                dosyasil($img['image']);
+            }
+            $imageMedia->delete();
+        }
 
         $slider->delete();
         return response(['error' => false, 'message' => 'Başarıyla Silindi.']);

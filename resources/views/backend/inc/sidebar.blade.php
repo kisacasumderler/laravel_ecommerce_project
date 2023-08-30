@@ -73,48 +73,86 @@
             </a>
             <div class="collapse" id="icons">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.setting.index') }}">Site Ayarları</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.setting.index') }}">Site
+                            Ayarları</a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-            <i class="ti-layout-grid2 menu-icon"></i>
-            <span class="menu-title">Ürünler</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="auth">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{ route('panel.product.index') }}"> Ürünler </a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{ route('panel.product.create') }}"> Ürün Ekle </a></li>
-            </ul>
-          </div>
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                <i class="ti-layout-grid2 menu-icon"></i>
+                <span class="menu-title">Ürünler</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.product.index') }}"> Ürünler </a>
+                    </li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.product.create') }}"> Ürün Ekle
+                        </a></li>
+                </ul>
+            </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
-              <i class="ti-star menu-icon"></i>
-              <span class="menu-title">Kampanya</span>
-              <i class="menu-arrow"></i>
+                <i class="ti-star menu-icon"></i>
+                <span class="menu-title">Kampanya</span>
+                <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="error">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{route('panel.offer.index')}}">Kampanya</a></li>
-              </ul>
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.offer.index') }}">Kampanya</a>
+                    </li>
+                </ul>
             </div>
-          </li>
-          <li class="nav-item">
+        </li>
+        <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order">
-              <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">Siparişler</span>
-              <i class="menu-arrow"></i>
+                <i class="icon-paper menu-icon"></i>
+                <span class="menu-title">Siparişler</span>
+                <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="order">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{route('panel.order.index')}}">Siparişler</a></li>
-              </ul>
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.order.index') }}">Siparişler</a>
+                    </li>
+                </ul>
             </div>
-          </li>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#pageSeo" aria-expanded="false" aria-controls="pageSeo">
+                <i class="fa-brands fa-connectdevelop"></i>
+                <span class="menu-title">Sayfa Seo ayarları</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="pageSeo">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.pageseo.index') }}">Sayfa
+                            Seo</a></li>
+                </ul>
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.pageseo.create') }}">Sayfa
+                            Seo Ekle</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#imageSeo" aria-expanded="false" aria-controls="imageSeo">
+                <i class="fa-solid fa-icons"></i>
+                <span class="menu-title"> Resim Seo ayarları</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="imageSeo">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.imageseo.index') }}">Resim
+                            Seo</a></li>
+                </ul>
+            </div>
+        </li>
         {{--
+
 
 
         <li class="nav-item">
