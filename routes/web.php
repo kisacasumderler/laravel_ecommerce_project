@@ -18,7 +18,7 @@ Route::group(['middleware' => 'sitesetting'], function () {
     Route::get('/erkek/{slug?}', [PageController::class, 'urunler'])->name('erkekurunler');
     Route::get('/kadin/{slug?}', [PageController::class, 'urunler'])->name('kadinurunler');
     Route::get('/cocuk/{slug?}', [PageController::class, 'urunler'])->name('cocukurunler');
-    Route::get('/indirimdekiler', [PageController::class, 'indirimdekiurunler'])->name('indirimdekiurunler');
+    Route::get('/indirimdekiler', [PageController::class, 'urunler'])->name('indirimdekiurunler');
     Route::get('/urun/{slug}', [PageController::class, 'urundetay'])->name('urundetay');
 
     Route::get('/sepet', [CartController::class, 'index'])->name('sepet');

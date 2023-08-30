@@ -2,6 +2,7 @@
 use App\Http\Controllers\Backend\AboutController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ContactController;
+use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ImageSeoController;
 use App\Http\Controllers\Backend\ImageUploadController;
@@ -17,14 +18,20 @@ Route::group(['middleware' => ['panelsetting','auth'],'prefix'=>'panel','as'=>'p
 
     Route::get('/', [DashboardController::class, 'index'])->name('panel');
 
-    Route::get('/slider', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/coupons/ekle', [CouponController::class, 'create'])->name('coupons.create');
+    Route::get('/coupons/{id}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
+    Route::post('/coupons/store', [CouponController::class, 'store'])->name('coupons.store');
+    Route::put('/coupons/{id}/update', [CouponController::class, 'update'])->name('coupons.update');
+    Route::delete('/coupons/destroy', [CouponController::class, 'destroy'])->name('coupons.destroy');
+    Route::post('/coupons-durum/status/update', [CouponController::class, 'statusUpdate'])->name('coupons.status');
 
+    Route::get('/slider', [SliderController::class, 'index'])->name('slider.index');
     Route::get('/slider/ekle', [SliderController::class, 'create'])->name('slider.create');
     Route::get('/slider/{id}/edit', [SliderController::class, 'edit'])->name('slider.edit');
     Route::post('/slider/store', [SliderController::class, 'store'])->name('slider.store');
     Route::put('/slider/{id}/update', [SliderController::class, 'update'])->name('slider.update');
     Route::delete('/slider/destroy', [SliderController::class, 'destroy'])->name('slider.destroy');
-
     Route::post('/slider-durum/status/update', [SliderController::class, 'statusUpdate'])->name('slider.status');
 
     Route::resource('/category',CategoryController::class)->except('destroy')->except('update');

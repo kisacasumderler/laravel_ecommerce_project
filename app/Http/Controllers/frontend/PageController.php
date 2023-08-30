@@ -174,11 +174,12 @@ class PageController extends Controller
 
     public function indirimdekiurunler()
     {
+        $products = Product::where('status','1')->with('image')->paginate(20);
         $Breadcrumb = [
             'sayfalar' => [],
             'active' => 'İndirimdeki Ürünler'
         ];
-        return view('frontend.pages.products', compact('Breadcrumb'));
+        return view('frontend.pages.', compact('Breadcrumb','products'));
     }
 
     public function iletisim()

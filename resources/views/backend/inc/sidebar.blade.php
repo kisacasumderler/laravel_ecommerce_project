@@ -119,9 +119,23 @@
                 </ul>
             </div>
         </li>
-
         <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#pageSeo" aria-expanded="false" aria-controls="pageSeo">
+            <a class="nav-link" data-toggle="collapse" href="#coupons" aria-expanded="false"
+                aria-controls="coupons">
+                <i class="fas fa-ticket-alt"></i>
+                <span class="menu-title">Kuponlar</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="coupons">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('panel.coupons.index') }}">Kuponlar</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#pageSeo" aria-expanded="false"
+                aria-controls="pageSeo">
                 <i class="fa-brands fa-connectdevelop"></i>
                 <span class="menu-title">Sayfa Seo ayarları</span>
                 <i class="menu-arrow"></i>
@@ -137,9 +151,9 @@
                 </ul>
             </div>
         </li>
-
         <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#imageSeo" aria-expanded="false" aria-controls="imageSeo">
+            <a class="nav-link" data-toggle="collapse" href="#imageSeo" aria-expanded="false"
+                aria-controls="imageSeo">
                 <i class="fa-solid fa-icons"></i>
                 <span class="menu-title"> Resim Seo ayarları</span>
                 <i class="menu-arrow"></i>
