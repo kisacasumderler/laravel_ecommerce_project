@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 
@@ -17,22 +18,27 @@ class CouponController extends Controller
 
     public function create()
     {
-        return view('backend.pages.coupons.edit');
+        $categories = Category::where('status', '1')->select('id','name','cat_ust')->get();
+        $categories = groupCategory($categories);
+
+        return view('backend.pages.coupons.edit',compact('categories'));
     }
 
     public function store(Request $request)
     {
 
         $name = $request->name;
-        $question = Coupon::where('name',$name)->first();
-        if(!empty($question)) {
+        $question = Coupon::where('name', $name)->first();
+        if (!empty($question)) {
             return back()->withError('Zaten Kayıtlı!');
         }
 
         $couponArray = [];
         $couponArray['name'] = Guvenlik($request->name);
-        $couponArray['price'] = Guvenlik($request->content);
-        $couponArray['discount_rate'] = Guvenlik($request->link);
+        $couponArray['price'] = Guvenlik($request->price);
+        $couponArray['discount_rate'] = Guvenlik($request->discount_rate);
+        $couponArray['category_id'] = Guvenlik($request->category);
+        $couponArray['isDiscount'] = Guvenlik($request->isDiscount);
         $couponArray['status'] = Guvenlik($request->status);
 
         $coupon = Coupon::create($couponArray);
@@ -43,15 +49,17 @@ class CouponController extends Controller
     public function edit($id)
     {
         $coupon = Coupon::where('id', $id)->first();
-        return view('backend.pages.coupons.edit', compact('coupon'));
+        $categories = Category::where('status', '1')->select('id','name','cat_ust')->get();
+        $categories = groupCategory($categories);
+
+        return view('backend.pages.coupons.edit', compact('coupon', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-
         $name = $request->name;
-        $question = Coupon::where('id','!=',$id)->where('name',$name)->first();
-        if(!empty($question)) {
+        $question = Coupon::where('id', '!=', $id)->where('name', $name)->first();
+        if (!empty($question)) {
             return back()->withError('Zaten Kayıtlı!');
         }
 
@@ -60,8 +68,10 @@ class CouponController extends Controller
 
         $couponArray = [];
         $couponArray['name'] = Guvenlik($request->name);
-        $couponArray['price'] = Guvenlik($request->content);
-        $couponArray['discount_rate'] = Guvenlik($request->link);
+        $couponArray['price'] = Guvenlik($request->price);
+        $couponArray['discount_rate'] = Guvenlik($request->discount_rate);
+        $couponArray['category_id'] = Guvenlik($request->category);
+        $couponArray['isDiscount'] = Guvenlik($request->isDiscount);
         $couponArray['status'] = Guvenlik($request->status);
 
         $coupon->update($couponArray);

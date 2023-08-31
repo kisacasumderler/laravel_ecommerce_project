@@ -245,5 +245,62 @@ if (!function_exists('uploadimage')) {
 }
 
 
+if (!function_exists('groupCategory')) {
+    function groupCategory($categories, $parentId = null)
+    {
+        $result = [];
+
+        foreach ($categories as $category) {
+            if ($category['cat_ust'] == $parentId) {
+                $subCat = groupCategory($categories, $category['id']);
+                if (!empty($subCat)) {
+                    $category['subCat'] = $subCat;
+                }
+                $result[] = $category;
+            }
+        }
+        return $result;
+    }
+}
+
+function recursiveCategoryPrint($categories) {
+    if (!empty($categories) && count($categories) > 0) {
+        foreach ($categories as $category) {
+            echo $category->name . "<br>";
+
+            if (!is_string($category->subCat)) {
+                recursiveCategoryPrint($category->subCat);
+            }
+        }
+    }
+}
+
+function recursiveCategoryPrintWithParent($categories, $parentNames = []) {
+    if (!empty($categories) && count($categories) > 0) {
+        foreach ($categories as $category) {
+            $currentNames = array_merge($parentNames, [$category->name]);
+            echo '<option value="'.$category->id.'">'.implode('->', $currentNames).'</option>';
+
+            if (!is_string($category->subCat)) {
+                recursiveCategoryPrintWithParent($category->subCat, $currentNames);
+            }
+        }
+    }
+}
+function disocuntControl($discounts, $product) {
+    $price = $product->price;
+    $discountRate = 0;
+
+    foreach ($discounts as $discount) {
+        if ($discount->category_id == '0' || $discount->category_id == $product->category_id) {
+            $discountRate = $discount->discount_rate;
+            $price = $price - (($discountRate * $price) / 100);
+            break;
+        }
+    }
+
+    return ['price' => $price, 'discountRate' => $discountRate];
+}
+
 
 ?>

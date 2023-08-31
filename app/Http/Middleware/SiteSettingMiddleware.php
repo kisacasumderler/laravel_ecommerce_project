@@ -23,6 +23,7 @@ class SiteSettingMiddleware
 
         $categories = Category::where('status', '1')->with('subCategory')->withCount('items')->with('images')->get();
 
+        $categoriesAll = groupCategory($categories);
 
         $cartItem = session('cart', []);
         $totalQty = 0;
@@ -30,7 +31,7 @@ class SiteSettingMiddleware
             $totalQty += $cart['qty'];
         }
 
-        view()->share(['settings' => $settings, 'categories' => $categories, 'totalQty'=>$totalQty]);
+        view()->share(['settings' => $settings, 'categories' => $categories, 'totalQty'=>$totalQty,'categoriesAll'=>$categoriesAll]);
 
         return $next($request);
     }

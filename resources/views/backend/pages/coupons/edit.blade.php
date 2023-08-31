@@ -41,7 +41,28 @@
                         <input type="text" class="form-control" id="discount_rate" name="discount_rate"
                             value="{{ $coupon->discount_rate ?? old('discount_rate') }}" placeholder="İndirim Oranı">
                     </div>
-
+                    @if (!empty($categories))
+                    @php
+                        $couponCatId = $coupon->category_id ?? '0';
+                    @endphp
+                        <div class="form-group">
+                            <label for="category">İndirim Uygulanacak Ürünler</label>
+                            <select name="category" id="category" class="form-control">
+                                <option value="0">Tüm Ürünler</option>
+                                {{ recursiveCategoryPrintWithParent($categories) }}
+                            </select>
+                        </div>
+                    @endif
+                    <div class="form-group">
+                        <label for="durum">Kupon Türü</label>
+                        @php
+                            $isDiscount = $coupon->isDiscount ?? '1';
+                        @endphp
+                        <select class="form-control" id="durum" name="isDiscount">
+                            <option value="1" {{ $isDiscount == '1' ? 'selected' : '' }}>Ürün İndirim</option>
+                            <option value="0" {{ $isDiscount == '0' ? 'selected' : '' }}>Kupon Kodu</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="durum">Durum</label>
                         @php

@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Striped Table</h4>
                     <p class="card-description">
-                        <a href="{{ route('panel.coupons.create') }}" class="btn btn-primary">Yeni Slider</a>
+                        <a href="{{ route('panel.coupons.create') }}" class="btn btn-primary">Kupon Ekle</a>
                     </p>
                     <div class="table-responsive">
                         <table class="table table-striped">

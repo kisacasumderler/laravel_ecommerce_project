@@ -5,6 +5,7 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use App\Models\About;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -22,23 +23,23 @@ class PageController extends Controller
         $seoLists = metaolustur('hakkimizda');
 
         $seo = [
-            'title' => $seoLists['title'] ?? config('app.name').' Kimdir?',
-            'description' => $seoLists['description'] ?? config('app.name').' Hakkında Bilgi',
-            'keywords' => $seoLists['keywords'] ?? config('app.name').', hakkında, kimdir',
+            'title' => $seoLists['title'] ?? config('app.name') . ' Kimdir?',
+            'description' => $seoLists['description'] ?? config('app.name') . ' Hakkında Bilgi',
+            'keywords' => $seoLists['keywords'] ?? config('app.name') . ', hakkında, kimdir',
             'image' => asset('img/page-bg.jpg'),
             'url' => $seoLists['currenturl'] ?? null,
             'canonical' => $seoLists['trpage'] ?? null,
-            'robots' =>'index,follow',
+            'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.about', compact('seo','about', 'Breadcrumb'));
+        return view('frontend.pages.about', compact('seo', 'about', 'Breadcrumb'));
     }
     public function urundetay($slug)
     {
         $product = Product::where('slug', $slug)->where('status', '1')->firstOrFail();
         $Products = Product::where('id', '!=', $product->id)->where('category_id', $product->category_id)->where('status', '1')->orderBy('id', 'desc')->limit(6)->get();
 
-           $kategori = Category::where('id', $product->category_id)->with('category:id,name,slug')->first();
+        $kategori = Category::where('id', $product->category_id)->with('category:id,name,slug')->first();
 
         $Breadcrumb['active'] = $product->name;
 
@@ -59,21 +60,26 @@ class PageController extends Controller
             ];
         }
 
+
+        // indirim
+
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+
         //seo
 
-       $keywords = $kategori->name.','.$kategori->content.','.$product->size.','.$product->name.','.$product->color;
+        $keywords = $kategori->name . ',' . $kategori->content . ',' . $product->size . ',' . $product->name . ',' . $product->color;
 
         $seo = [
-            'title' => config('app.name').' | '.$product->name ?? '',
+            'title' => config('app.name') . ' | ' . $product->name ?? '',
             'description' => $product->short_text ?? '',
             'keywords' => $product->keywords ?? '',
             'image' => asset($product->image),
-            'url' => route('urundetay',$product->slug),
-            'canonical' => route('urundetay',$product->slug),
-            'robots' =>'index,follow',
+            'url' => route('urundetay', $product->slug),
+            'canonical' => route('urundetay', $product->slug),
+            'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.product', compact('seo','product', 'Products', 'Breadcrumb'));
+        return view('frontend.pages.product', compact('seo', 'product', 'Products', 'Breadcrumb', 'discounts'));
     }
     public function urunler(Request $request, $slug = null)
     {
@@ -154,32 +160,25 @@ class PageController extends Controller
         $sizeLists = Product::where('status', '1')->groupBy('size')->pluck('size')->toArray();
         $colors = Product::where('status', '1')->groupBy('color')->pluck('color')->toArray();
 
+        // indirim
+
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
 
         // seo
 
         $seoLists = metaolustur($category);
 
         $seo = [
-            'title' => $seoLists['title'] ?? config('app.name').' | Ürünler',
-            'description' => $seoLists['description'] ?? config('app.name').' | Ürünler Açıklama',
-            'keywords' => $seoLists['keywords'] ?? config('app.name').', kadın, erkek, çocuk, giyim, ayakkabı, çanta, aksesuar',
+            'title' => $seoLists['title'] ?? config('app.name') . ' | Ürünler',
+            'description' => $seoLists['description'] ?? config('app.name') . ' | Ürünler Açıklama',
+            'keywords' => $seoLists['keywords'] ?? config('app.name') . ', kadın, erkek, çocuk, giyim, ayakkabı, çanta, aksesuar',
             'image' => asset('img/page-bg.jpg'),
             'url' => $seoLists['currenturl'] ?? null,
             'canonical' => $seoLists['trpage'] ?? null,
-            'robots' =>'index,follow',
+            'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.products', compact('seo','Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors'));
-    }
-
-    public function indirimdekiurunler()
-    {
-        $products = Product::where('status','1')->with('image')->paginate(20);
-        $Breadcrumb = [
-            'sayfalar' => [],
-            'active' => 'İndirimdeki Ürünler'
-        ];
-        return view('frontend.pages.', compact('Breadcrumb','products'));
+        return view('frontend.pages.products', compact('seo', 'Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors', 'discounts'));
     }
 
     public function iletisim()
@@ -192,16 +191,16 @@ class PageController extends Controller
         $seoLists = metaolustur('iletisim');
 
         $seo = [
-            'title' => $seoLists['title'] ?? config('app.name').' | İletişim',
-            'description' => $seoLists['description'] ?? config('app.name').' İletişim sayfası',
-            'keywords' => $seoLists['keywords'] ?? config('app.name').', iletişim, soru, cevap',
+            'title' => $seoLists['title'] ?? config('app.name') . ' | İletişim',
+            'description' => $seoLists['description'] ?? config('app.name') . ' İletişim sayfası',
+            'keywords' => $seoLists['keywords'] ?? config('app.name') . ', iletişim, soru, cevap',
             'image' => asset('img/page-bg.jpg'),
             'url' => $seoLists['currenturl'] ?? null,
             'canonical' => $seoLists['trpage'] ?? null,
-            'robots' =>'index,follow',
+            'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.contact', compact('seo','Breadcrumb'));
+        return view('frontend.pages.contact', compact('seo', 'Breadcrumb'));
     }
 
 }

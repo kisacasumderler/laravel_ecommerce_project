@@ -19,7 +19,19 @@ class CartController extends Controller
             'active' => 'Sepet'
         ];
 
-        return view('frontend.pages.cart', compact('Breadcrumb','cartItem'));
+        $seoLists = metaolustur('sepet');
+
+        $seo = [
+            'title' => $seoLists['title'] ?? config('app.name') . ' | Sepet',
+            'description' => $seoLists['description'] ?? config('app.name') . ' Sepet Sayfası',
+            'keywords' => $seoLists['keywords'] ?? config('app.name') . ', sepet, ödeme',
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seoLists['currenturl'] ?? null,
+            'canonical' => $seoLists['trpage'] ?? null,
+            'robots' => 'index,follow',
+        ];
+
+        return view('frontend.pages.cart', compact('seo','Breadcrumb','cartItem'));
     }
 
     public function sepetform()
@@ -42,6 +54,11 @@ class CartController extends Controller
 
         $urun = Product::find($productID);
 
+
+        // indirim
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+        $urunFiyat = disocuntControl($discounts,$urun);
+
         if (!$urun) {
             return back()->withError('Ürün Bulunamadı');
         }
@@ -54,7 +71,7 @@ class CartController extends Controller
             $cartItem[$productID] = [
                 'image' => $request->urunImg,
                 'name' => $urun->name,
-                'price' => $urun->price,
+                'price' => $urunFiyat['price'],
                 'qty' => $qty,
                 'size' => $size,
                 'kdv' => $urun->kdv ?? 0,

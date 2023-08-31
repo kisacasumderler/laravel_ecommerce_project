@@ -40,6 +40,10 @@ class Category extends Model
         return $total;
     }
 
+    public function parentCategory() {
+        return $this->belongsTo(Category::class, 'cat_ust','id');
+    }
+
     public function sluggable(): array
     {
         return [
