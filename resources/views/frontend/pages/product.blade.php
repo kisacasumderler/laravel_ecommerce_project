@@ -8,7 +8,11 @@
                 ->sortByDesc('vitrin')
                 ->first()['image'] ?? 'images/resimyok.jpg';
     @endphp
-
+    @if (!empty($discounts) && $discounts->count() > 0)
+        @php
+            $newPrice = disocuntControl($discounts, $product);
+        @endphp
+    @endif
     <div class="site-section">
         <div class="container">
             <div class="row">
@@ -18,11 +22,30 @@
                 <div class="col-md-6">
                     <h2 class="text-black">{{ $product->name ?? '' }}</h2>
                     {!! $product->content !!}
-                    <p><strong class="text-primary h4">{{ number_format($product->price, 2) }}₺</strong></p>
+                    @if (isset($newPrice['discountRate']))
+                        <p class="mt-2">
+                            <span class="bg-danger text-white p-1 rounded">
+                                % {{ $newPrice['discountRate'] }} İndirimli Ürün
+                            </span>
+                        </p>
+                    @endif
+                    <p>
+                        @if (isset($newPrice['price']))
+                            @if ($newPrice['price'] != $product->price)
+                                <span style="text-decoration: line-through">
+                                    {{ number_format($product->price, 2) }}₺</span>
+                                <strong class="text-primary h4">{{ number_format($newPrice['price'], 2) }}₺</strong>
+                            @else
+                                <strong class="text-primary h4">{{ number_format($product->price, 2) }}₺</strong>
+                            @endif
+                        @else
+                            <strong class="text-primary h4">{{ number_format($product->price, 2) }}₺</strong>
+                        @endif
+                    </p>
                     <form action="{{ route('sepet.add') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="urunImg" value="{{$image ?? 'images/resimyok.jpg'}}">
+                        <input type="hidden" name="urunImg" value="{{ $image ?? 'images/resimyok.jpg' }}">
                         <div class="mb-1 d-flex">
                             <label for="product{{ $product->id }}" class="d-flex mr-3 mb-3">
                                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input
@@ -68,19 +91,45 @@
                                             ->sortByDesc('vitrin')
                                             ->first()['image'] ?? 'images/resimyok.jpg';
                                 @endphp
+                                @if (!empty($discounts) && $discounts->count() > 0)
+                                    @php
+                                        $spNewPrice = disocuntControl($discounts, $product);
+                                    @endphp
+                                @endif
                                 <div class="item">
                                     <div class="block-4 text-center">
                                         <figure class="block-4-image">
-                                            <img src="{{ asset($images ?? 'images/resimyok.jpg') }}" alt="Image placeholder"
-                                                class="img-fluid">
+                                            <img src="{{ asset($images ?? 'images/resimyok.jpg') }}"
+                                                alt="Image placeholder" class="img-fluid">
                                         </figure>
                                         <div class="block-4-text p-4">
                                             <h3><a
                                                     href="{{ route('urundetay', $product->slug) }}">{{ $product->name }}</a>
                                             </h3>
                                             <p class="mb-0">{{ $product->short_text }}</p>
-                                            <p class="text-primary font-weight-bold">
-                                                {{ number_format($product->price, 2) }}₺</p>
+                                            @if (isset($spNewPrice['discountRate']))
+                                                <p class="mt-2">
+                                                    <span class="bg-danger text-white p-1 rounded">
+                                                        % {{ $spNewPrice['discountRate'] }} İndirimli Ürün
+                                                    </span>
+                                                </p>
+                                            @endif
+                                            <p>
+                                                @if (isset($spNewPrice['price']))
+                                                    @if ($spNewPrice['price'] != $product->price)
+                                                        <span style="text-decoration: line-through">
+                                                            {{ number_format($product->price, 2) }}₺</span>
+                                                        <strong
+                                                            class="text-primary h4">{{ number_format($spNewPrice['price'], 2) }}₺</strong>
+                                                    @else
+                                                        <strong
+                                                            class="text-primary h4">{{ number_format($product->price, 2) }}₺</strong>
+                                                    @endif
+                                                @else
+                                                    <strong
+                                                        class="text-primary h4">{{ number_format($product->price, 2) }}₺</strong>
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
