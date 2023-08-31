@@ -39,11 +39,13 @@
                     <div class="carousel-item {{ $loop->first == true ? 'active' : '' }}">
                         @if (!empty($slider->images))
                             <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block w-100">
-                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}" alt="{{$images->sortByDesc('vitrin')->first()['alt']}}" class="img-fluid w-100" />
+                                <img src="{{ asset($images->sortByDesc('vitrin')->first()['image']) }}"
+                                    alt="{{ $images->sortByDesc('vitrin')->first()['alt'] }}" class="img-fluid w-100" />
                             </a>
                         @else
                             <a href="{{ url($slider->link ?? 'urunler') }}" class="d-block w-100"><img
-                                    src="{{ asset('images/sliderbg.jpg') }}" alt="{{$slider->name}}" class="img-fluid w-100"></a>
+                                    src="{{ asset('images/sliderbg.jpg') }}" alt="{{ $slider->name }}"
+                                    class="img-fluid w-100"></a>
                             <div class="carousel-caption d-md-block">
                                 <h3>{{ $slider->name }}</h3>
                                 <p>{{ $slider->content }}</p>
@@ -87,7 +89,8 @@
                         @if (!empty($item->images))
                             <a href="{{ url($item->link ?? 'urunler') }}" class="d-block">
                                 <img src="{{ asset($mobileImages->sortByDesc('vitrin')->first()['image']) }}"
-                                 alt="{{$mobileImages->sortByDesc('vitrin')->first()['alt']}}"   class="img-fluid w-100" />
+                                    alt="{{ $mobileImages->sortByDesc('vitrin')->first()['alt'] }}"
+                                    class="img-fluid w-100" />
                             </a>
                         @else
                             <a href="{{ url($item->link ?? 'urunler') }}" class="d-block">
@@ -172,32 +175,24 @@
                                     @foreach ($category->subCategory->where('status', '1') as $alt_category)
                                         @isset($alt_category->images)
                                             @php
-                                                $subCatImg = collect($alt_category->images->data ?? 'images/resimyok.jpg')->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.jpg';
+                                                $subCatImg =
+                                                    collect($alt_category->images->data ?? 'images/resimyok.jpg')
+                                                        ->sortByDesc('vitrin')
+                                                        ->first()['image'] ?? null;
                                             @endphp
-                                            <div class="item">
-                                                <div class="block-4 text-center bg-light">
-                                                    <figure class="block-4-image">
-                                                        <a
-                                                            href="{{ route($category->slug . 'urunler', $alt_category->slug) }}">
-                                                            <img src="{{ asset($subCatImg) }}"
-                                                                alt="Image placeholder" class="img-fluid"></a>
-                                                    </figure>
+                                            @if (isset($subCatImg))
+                                                <div class="item">
+                                                    <div class="block-4 text-center bg-light">
+                                                        <figure class="block-4-image">
+                                                            <a
+                                                                href="{{ route($category->slug . 'urunler', $alt_category->slug) }}">
+                                                                <img src="{{ asset($subCatImg) }}" alt="Image placeholder"
+                                                                    class="img-fluid"></a>
+                                                        </figure>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         @endisset
-
-                                        {{-- @isset($alt_category->image)
-                                            <div class="item">
-                                                <div class="block-4 text-center bg-light">
-                                                    <figure class="block-4-image">
-                                                        <a
-                                                            href="{{ route($category->slug . 'urunler', $alt_category->slug) }}">
-                                                            <img src="{{ asset($alt_category->image) }}"
-                                                                alt="Image placeholder" class="img-fluid"></a>
-                                                    </figure>
-                                                </div>
-                                            </div>
-                                        @endisset --}}
                                     @endforeach
                                 @endforeach
                             </div>
@@ -222,6 +217,11 @@
                                     @php
                                         $productImage = collect($Product->images->data ?? '');
                                     @endphp
+                                    @if (!empty($discounts) && $discounts->count() > 0)
+                                        @php
+                                            $newPrice = disocuntControl($discounts, $Product);
+                                        @endphp
+                                    @endif
                                     <div class="item">
                                         <div class="block-4 text-center">
                                             <figure class="block-4-image">
@@ -233,8 +233,29 @@
                                                         href="{{ route('urundetay', $Product->slug) }}">{{ $Product->name }}</a>
                                                 </h3>
                                                 <p class="mb-0">{{ $Product->short_text }}</p>
-                                                <p class="text-primary font-weight-bold">
-                                                    {{ number_format($Product->price, 2) }}₺</p>
+                                                @if (isset($newPrice['discountRate']) && $newPrice['discountRate'] > 0)
+                                                    <p class="mt-2">
+                                                        <span class="bg-danger text-white p-1 rounded">
+                                                            % {{ $newPrice['discountRate'] }} İndirimli Ürün
+                                                        </span>
+                                                    </p>
+                                                @endif
+                                                <p>
+                                                    @if (isset($newPrice['price']))
+                                                        @if ($newPrice['price'] != $Product->price)
+                                                            <span style="text-decoration: line-through">
+                                                                {{ number_format($Product->price, 2) }}₺</span>
+                                                            <strong
+                                                                class="text-primary h4">{{ number_format($newPrice['price'], 2) }}₺</strong>
+                                                        @else
+                                                            <strong
+                                                                class="text-primary h4">{{ number_format($Product->price, 2) }}₺</strong>
+                                                        @endif
+                                                    @else
+                                                        <strong
+                                                            class="text-primary h4">{{ number_format($Product->price, 2) }}₺</strong>
+                                                    @endif
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

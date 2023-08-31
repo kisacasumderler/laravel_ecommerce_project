@@ -5,6 +5,7 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use App\Models\About;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Slider;
 use App\Models\SliderMobile;
@@ -27,12 +28,16 @@ class PageHomeController extends Controller
 
         $specialOffer = specialOffer::where('status', '1')->orderByDesc('id')->first();
 
+        // indirim
+
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+
         $seoLists = metaolustur('anasayfa');
 
         $seo = [
-            'title' => $seoLists['title'] ?? config('app.name').' | Anasayfa',
-            'description' => $seoLists['description'] ?? config('app.name').' | Açıklama',
-            'keywords' => $seoLists['keywords'] ?? config('app.name').', alışveriş, eticaret, kadın, erkek, çocuk,aksesuar, anasayfa',
+            'title' => $seoLists['title'] ?? config('app.name') . ' | Anasayfa',
+            'description' => $seoLists['description'] ?? config('app.name') . ' | Açıklama',
+            'keywords' => $seoLists['keywords'] ?? config('app.name') . ', alışveriş, eticaret, kadın, erkek, çocuk,aksesuar, anasayfa',
             'image' => asset('img/page-bg.jpg'),
             'url' => $seoLists['currenturl'] ?? null,
             'canonical' => $seoLists['trpage'] ?? null,
@@ -40,6 +45,6 @@ class PageHomeController extends Controller
         ];
 
 
-        return view('frontend.pages.index', compact('seo', 'sliders', 'slidersMobile', 'home', 'about', 'newProducts', 'specialOffer'));
+        return view('frontend.pages.index', compact('seo', 'sliders', 'slidersMobile', 'home', 'about', 'newProducts', 'specialOffer','discounts'));
     }
 }

@@ -62,7 +62,6 @@ class PageController extends Controller
 
 
         // indirim
-
         $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
 
         //seo

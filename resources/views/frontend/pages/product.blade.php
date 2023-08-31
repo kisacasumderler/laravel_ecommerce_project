@@ -22,7 +22,7 @@
                 <div class="col-md-6">
                     <h2 class="text-black">{{ $product->name ?? '' }}</h2>
                     {!! $product->content !!}
-                    @if (isset($newPrice['discountRate']))
+                    @if (isset($newPrice['discountRate']) && $newPrice['discountRate'] > 0)
                         <p class="mt-2">
                             <span class="bg-danger text-white p-1 rounded">
                                 % {{ $newPrice['discountRate'] }} İndirimli Ürün
@@ -107,7 +107,7 @@
                                                     href="{{ route('urundetay', $product->slug) }}">{{ $product->name }}</a>
                                             </h3>
                                             <p class="mb-0">{{ $product->short_text }}</p>
-                                            @if (isset($spNewPrice['discountRate']))
+                                            @if (isset($spNewPrice['discountRate']) && $spNewPrice['discountRate'] > 0)
                                                 <p class="mt-2">
                                                     <span class="bg-danger text-white p-1 rounded">
                                                         % {{ $spNewPrice['discountRate'] }} İndirimli Ürün
