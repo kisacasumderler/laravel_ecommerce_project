@@ -266,6 +266,72 @@
                 </div>
             </div>
         @endif
+        {{-- couponsWithProducts --}}
+        @if (!empty($couponsWithProducts) && $couponsWithProducts->count() > 0)
+            <div class="site-section block-3 site-blocks-2 bg-light">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-7 site-section-heading text-center pt-4">
+                            <h2>Fırsat Ürünleri</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="nonloop-block-3 owl-carousel">
+                                @foreach ($couponsWithProducts as $discountedProduct)
+                                    @php
+                                        $discountedProductImage = collect($discountedProduct->images->data ?? '');
+                                    @endphp
+                                    @if (!empty($discounts) && $discounts->count() > 0)
+                                        @php
+                                            $newPrice = disocuntControl($discounts, $discountedProduct);
+                                        @endphp
+                                    @endif
+                                    <div class="item">
+                                        <div class="block-4 text-center">
+                                            <figure class="block-4-image">
+                                                <img src="{{ asset($discountedProductImage->sortByDesc('vitrin')->first()['image'] ?? 'images/resimyok.jpg') }}"
+                                                    alt="Image placeholder" class="img-fluid">
+                                            </figure>
+                                            <div class="block-4-text p-4">
+                                                <h3><a
+                                                        href="{{ route('urundetay', $discountedProduct->slug) }}">{{ $discountedProduct->name }}</a>
+                                                </h3>
+                                                <p class="mb-0">{{ $discountedProduct->short_text }}</p>
+                                                @if (isset($newPrice['discountRate']) && $newPrice['discountRate'] > 0)
+                                                    <p class="mt-2">
+                                                        <span class="bg-danger text-white p-1 rounded">
+                                                            % {{ $newPrice['discountRate'] }} İndirimli Ürün
+                                                        </span>
+                                                    </p>
+                                                @endif
+                                                <p>
+                                                    @if (isset($newPrice['price']))
+                                                        @if ($newPrice['price'] != $discountedProduct->price)
+                                                            <span style="text-decoration: line-through">
+                                                                {{ number_format($discountedProduct->price, 2) }}₺</span>
+                                                            <strong
+                                                                class="text-primary h4">{{ number_format($newPrice['price'], 2) }}₺</strong>
+                                                        @else
+                                                            <strong
+                                                                class="text-primary h4">{{ number_format($discountedProduct->price, 2) }}₺</strong>
+                                                        @endif
+                                                    @else
+                                                        <strong
+                                                            class="text-primary h4">{{ number_format($discountedProduct->price, 2) }}₺</strong>
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if (!empty($specialOffer) && $specialOffer->count() > 0)
             <div class="site-section block-8">
                 <div class="container">

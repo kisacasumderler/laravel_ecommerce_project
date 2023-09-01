@@ -37,4 +37,8 @@ class Product extends Model
             ]
         ];
     }
+
+    public function couponsWithProducts() {
+        return $this->hasOne(Coupon::class, 'category_id','category_id')->where('status','1')->where('qty','>','0')->where('discount_rate','>','0');
+    }
 }
