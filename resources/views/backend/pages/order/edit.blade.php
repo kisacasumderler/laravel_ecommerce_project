@@ -210,9 +210,19 @@
                                     @endphp
                                 @endforeach
                                 <tr>
-                                    <td colspan="4">Sişariş Toplam Tutar: </td>
+                                    <td colspan="4"> Toplam Tutar: </td>
                                     <td colspan="1" class="bg-success text-white">{{ number_format($totalPrice,2)}}₺</td>
                                 </tr>
+                                @if (isset($order['kupon_price']) && $order['kupon_price']>0)
+                                <tr>
+                                    <td colspan="4">Uygulanan İndirim: </td>
+                                    <td colspan="1" class="bg-danger text-white">-{{ number_format($order['kupon_price'])}}₺</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Sipariş Toplam Tutar: </td>
+                                    <td colspan="1" class="bg-success text-white">{{ number_format(($totalPrice - $order['kupon_price']),2)}}₺</td>
+                                </tr>
+                                @endif
                             @endif
                         </tbody>
                     </table>

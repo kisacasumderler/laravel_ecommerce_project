@@ -275,18 +275,20 @@ function recursiveCategoryPrint($categories) {
     }
 }
 
-function recursiveCategoryPrintWithParent($categories, $parentNames = []) {
+function recursiveCategoryPrintWithParent($categories, $parentNames = [], $selectedCategoryId = null) {
     if (!empty($categories) && count($categories) > 0) {
         foreach ($categories as $category) {
             $currentNames = array_merge($parentNames, [$category->name]);
-            echo '<option value="'.$category->id.'">'.implode('->', $currentNames).'</option>';
+            $selected = ($category->id == $selectedCategoryId) ? 'selected' : '';
+            echo '<option value="'.$category->id.'" '.$selected.'>'.implode('->', $currentNames).'</option>';
 
             if (!is_string($category->subCat)) {
-                recursiveCategoryPrintWithParent($category->subCat, $currentNames);
+                recursiveCategoryPrintWithParent($category->subCat, $currentNames, $selectedCategoryId);
             }
         }
     }
 }
+
 function disocuntControl($discounts, $product) {
     $price = $product->price;
     $discountRate = 0;

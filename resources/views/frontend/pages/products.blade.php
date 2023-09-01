@@ -40,7 +40,6 @@
                     </div>
                     <div class="row paginateButtons">{{ $products->withQueryString()->links('pagination::bootstrap-4') }}
                     </div>
-
                 </div>
 
                 <div class="col-md-3 order-1 mb-5 mb-md-0">

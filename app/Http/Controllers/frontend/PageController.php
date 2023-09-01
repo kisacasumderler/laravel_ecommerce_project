@@ -37,7 +37,7 @@ class PageController extends Controller
     public function urundetay($slug)
     {
         $product = Product::where('slug', $slug)->where('status', '1')->firstOrFail();
-        $Products = Product::where('id', '!=', $product->id)->where('category_id', $product->category_id)->where('status', '1')->orderBy('id', 'desc')->limit(6)->get();
+        $Products = Product::where('id', '!=', $product->id)->where('category_id', $product->category_id)->where('status', '1')->where('qty','>','0')->orderBy('id', 'desc')->limit(6)->get();
 
         $kategori = Category::where('id', $product->category_id)->with('category:id,name,slug')->first();
 
@@ -62,7 +62,7 @@ class PageController extends Controller
 
 
         // indirim
-        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->where('qty','>','0')->get();
 
         //seo
 
@@ -80,7 +80,7 @@ class PageController extends Controller
 
         return view('frontend.pages.product', compact('seo', 'product', 'Products', 'Breadcrumb', 'discounts'));
     }
-    public function urunler(Request $request, $slug = null)
+    public function urunler(Request $request,$cat = null, $slug = null)
     {
 
         $category = request()->segment(1) ?? null;
@@ -124,7 +124,8 @@ class PageController extends Controller
             $Breadcrumb['active'] = $anakategori->name . ' ' . $altkategori->name;
         }
 
-        $products = Product::where('status', '1')->select(['id', 'name', 'slug', 'size', 'color', 'price', 'category_id', 'short_text'])
+        $products = Product::where('status', '1')->select(['id', 'name', 'slug', 'size', 'color', 'price', 'category_id', 'short_text','qty'])
+        ->where('qty','>','0')
             ->where(
                 function ($q) use ($size, $color, $start_price, $end_price) {
                     if (!empty($size)) {
@@ -155,13 +156,13 @@ class PageController extends Controller
             return response(['data' => $view, 'paginate' => (string) $products->withQueryString()->links('vendor.pagination.bootstrap-4')]);
         }
 
-        $maxprice = Product::max('price');
-        $sizeLists = Product::where('status', '1')->groupBy('size')->pluck('size')->toArray();
-        $colors = Product::where('status', '1')->groupBy('color')->pluck('color')->toArray();
+
+        $maxprice = Product::where('qty','>','0')->max('price');
+        $sizeLists = Product::where('status', '1')->where('qty','>','0')->groupBy('size')->pluck('size')->toArray();
+        $colors = Product::where('status', '1')->where('qty','>','0')->groupBy('color')->pluck('color')->toArray();
 
         // indirim
-
-        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->where('qty','>','0')->get();
 
         // seo
 
@@ -177,7 +178,7 @@ class PageController extends Controller
             'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.products', compact('seo', 'Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors', 'discounts'));
+        return view('frontend.pages.products', compact('seo', 'Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors', 'discounts','cat','slug'));
     }
 
     public function iletisim()

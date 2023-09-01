@@ -1,6 +1,6 @@
 @extends('frontend.layout.layout')
 @section('content')
-@include('backend.inc.Breadcrumb')
+    @include('backend.inc.Breadcrumb')
     <div class="site-section">
         <div class="container">
             <div class="row mb-5">
@@ -79,8 +79,7 @@
                                                         $sifrele = sifrele($key);
                                                     @endphp
                                                     <input type="hidden" name='product_id' value="{{ $sifrele }}">
-                                                    <button type="submit"
-                                                        class="btn btn-primary btn-sm">X</button>
+                                                    <button type="submit" class="btn btn-primary btn-sm">X</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -96,10 +95,10 @@
                 <div class="col-md-6">
                     <div class="row mb-5">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <button class="btn btn-primary btn-sm btn-block">Sepeti Güncelle</button>
+                            <button class="btn btn-primary btn-sm btn-block refreshCart">Sepeti Güncelle</button>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-outline-primary btn-sm btn-block">Alışverişe Devam Et</button>
+                            <a href="{{route('urunler')}}" class="btn btn-outline-primary btn-sm btn-block">Alışverişe Devam Et</a>
                         </div>
                     </div>
                     <form class="row" method="POST" action="{{ route('coupon.check') }}">
@@ -125,6 +124,16 @@
                                     <h3 class="text-black h4 text-uppercase">Sepet Toplamı</h3>
                                 </div>
                             </div>
+                            @if (session('coupon_code') && session('kupon_price'))
+                                <div class="row mb-5">
+                                    <div class="col-md-6">
+                                        indirim Tutar :
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <strong class="text-danger couponPrice">-{{ session('kupon_price') }}₺</strong>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="row mb-5">
                                 <div class="col-md-6">
                                     <span class="text-black">Toplam Tutar</span>
@@ -154,6 +163,11 @@
 @section('customjs')
     <script>
         $(document).ready(function() {
+
+            $(document).on('click', '.refreshCart', function(e) {
+                location.reload();
+            })
+
             $(document).on('click', '.paymentButton', function(e) {
                 let url = "{{ route('sepet.form') }}";
                 @if (!empty(session()->get('cart')))
@@ -203,8 +217,13 @@
                                 $('.product' + id).find('.productPrice').text(formatNumber(price));
                                 $('.product' + id).find('.ProductTotalPrice').text(formatNumber(
                                     totalPrice));
+
                             }
                         }
+
+                        let kupon = parseInt("{{ session('kupon_price') ?? '0' }}");
+                        totalCartPrice = totalCartPrice - kupon;
+
                         $('.cartTotalPrice').text(formatNumber(totalCartPrice))
                     }
                 });
@@ -225,7 +244,7 @@
                     },
                     type: "POST",
                     url: "{{ route('sepet.remove') }}",
-                    data : formData,
+                    data: formData,
                     success: function(response) {
                         toastr.success(response.message);
                         $('.count').text(response.sepetCount);

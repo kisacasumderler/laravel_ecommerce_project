@@ -12,6 +12,7 @@
             </div>
             <form action="{{ route('sepet.save') }}" class="row" method="POST">
                 @csrf
+                <input type="hidden" name="kupon_price" value="{{sifrele(session('kupon_price') ?? null)}}">
                 <div class="col-md-6 mb-5 mb-md-0">
                     <h2 class="h3 mb-3 text-black">Ödeme Bilgileri</h2>
                     <div class="p-3 p-lg-5 border">
@@ -155,7 +156,7 @@
                                                     <tr>
                                                         <td>{{ $cart['name'] }} <strong
                                                                 class="mx-2">x</strong>{{ $cart['qty'] }}</td>
-                                                        <td>{{ number_format($cart['qty'] * $cart['price'], 2) }}₺</td>
+                                                        <td>{{ number_format($cart['price'], 2) }}₺</td>
                                                     </tr>
                                                     <tr>
                                                         @php

@@ -13,6 +13,7 @@ class Coupon extends Model
         'discount_rate',
         'status',
         'category_id',
-        'isDiscount'
+        'isDiscount',
+        'qty'
     ];
 }

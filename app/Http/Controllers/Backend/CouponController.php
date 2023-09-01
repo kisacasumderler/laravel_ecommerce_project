@@ -33,12 +33,14 @@ class CouponController extends Controller
             return back()->withError('Zaten Kayıtlı!');
         }
 
+
         $couponArray = [];
         $couponArray['name'] = Guvenlik($request->name);
         $couponArray['price'] = Guvenlik($request->price);
         $couponArray['discount_rate'] = Guvenlik($request->discount_rate);
         $couponArray['category_id'] = Guvenlik($request->category);
         $couponArray['isDiscount'] = Guvenlik($request->isDiscount);
+        $couponArray['qty'] = Guvenlik($request->qty);
         $couponArray['status'] = Guvenlik($request->status);
 
         $coupon = Coupon::create($couponArray);
@@ -72,6 +74,7 @@ class CouponController extends Controller
         $couponArray['discount_rate'] = Guvenlik($request->discount_rate);
         $couponArray['category_id'] = Guvenlik($request->category);
         $couponArray['isDiscount'] = Guvenlik($request->isDiscount);
+        $couponArray['qty'] = Guvenlik($request->qty);
         $couponArray['status'] = Guvenlik($request->status);
 
         $coupon->update($couponArray);

@@ -22,12 +22,13 @@ class ProductController extends Controller
     {
 
         $categories = Category::where('status', '1')->with('images')->get();
+        $categories = Category::where('status', '1')->get();
+        $categories = groupCategory($categories);
         return view('backend.pages.product.edit', compact('categories'));
     }
 
     public function store(ProductRequest $request)
     {
-
 
         $product = Product::create(
             [
@@ -56,6 +57,7 @@ class ProductController extends Controller
     {
         $product = Product::where('id', $id)->first();
         $categories = Category::where('status', '1')->get();
+        $categories = groupCategory($categories);
         return view('backend.pages.product.edit', compact('product', 'categories'));
     }
 

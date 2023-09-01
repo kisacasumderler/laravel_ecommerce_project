@@ -22,15 +22,14 @@ class PageHomeController extends Controller
         $slidersMobile = SliderMobile::where('status', '1')->with('images')->get();
         $home = 'Anasayfa';
 
-        $newProducts = Product::where('status', '1')->with('images')->orderByDesc('id')->limit(10)->get();
+        $newProducts = Product::where('status', '1')->where('qty','>','0')->with('images')->orderByDesc('id')->limit(10)->get();
 
         $about = About::where('id', '1')->first();
 
         $specialOffer = specialOffer::where('status', '1')->orderByDesc('id')->first();
 
         // indirim
-
-        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->select('discount_rate', 'category_id')->get();
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->where('qty','>','0')->get();
 
         $seoLists = metaolustur('anasayfa');
 

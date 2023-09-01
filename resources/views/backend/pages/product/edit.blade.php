@@ -31,7 +31,7 @@
                         <div class="col-4 form-group">
                             <label for="fiyat">Fiyat</label>
                             <input type="text" class="form-control" placeholder="kdv hariç fiyatı buraya yazınız."
-                             value="{{$product->tax_free_price ?? ''}}"   id="fiyat" name="tax_free_price">
+                                value="{{ $product->tax_free_price ?? '' }}" id="fiyat" name="tax_free_price">
                         </div>
                         <div class="col-4 form-group">
                             <label for="kdv">Kdv Oranı (%)</label>
@@ -40,8 +40,8 @@
                         </div>
                         <div class="col-4 form-group">
                             <label for="price">Kdv Dahil Fiyat</label>
-                            <input type="text" class="form-control" id="price"
-                                value="{{ $product->price ?? '' }}" placeholder="Kdv Dahil Toplam fiyat" readonly>
+                            <input type="text" class="form-control" id="price" value="{{ $product->price ?? '' }}"
+                                placeholder="Kdv Dahil Toplam fiyat" readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -74,30 +74,17 @@
                             value="{{ $product->color ?? '' }}" placeholder="Kategori adı">
                     </div>
                     <div class="form-group">
-                        <label for="category_id">Kategori Adı</label>
-                        <select name="category_id" id="category_id" class="form-control">
-                            <option value="">Kategori Seç</option>
-                            {{-- @foreach ($categories as $alt)
-                                <option value="{{ $alt->id }}" @isset($product) {{$product->category_id == $alt->id ? 'selected':''}}
-                                @endisset >{{$alt->name}}</option>
-                            @endforeach --}}
-                            @foreach ($categories->where('cat_ust', null) as $categoryust)
-                                <option value="{{ $categoryust->id }}"
-                                    @isset($product) {{ $product->category_id == $categoryust->id ? 'selected' : '' }}
-                                @endisset>
-                                    {{ $categoryust->name }}
-                                </option>
-                                @foreach ($categories->where('cat_ust', '!=', null) as $item)
-                                    @if ($categoryust->id == $item->cat_ust)
-                                        <option value="{{ $item->id }}"
-                                            @isset($product) {{ $product->category_id == $item->id ? 'selected' : '' }}
-                                            @endisset>
-                                            {{ $categoryust->name }} {{ $item->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            @endforeach
-                        </select>
+                        @if (!empty($categories))
+                            @php
+                                $couponCatId = $coupon->category_id ?? null;
+                            @endphp
+                            <div class="form-group">
+                                <label for="category">ürün Kategori</label>
+                                <select name="category" id="category" class="form-control">
+                                    {{ recursiveCategoryPrintWithParent($categories, [], $couponCatId) }}
+                                </select>
+                            </div>
+                        @endif
                     </div>
                     <div class="form-group">
                         <label for="short_text">Kısa Bilgi</label>
@@ -111,22 +98,25 @@
                         <div class="col">
                             <div class="col-lg-12 d-flex images">
                                 @if (isset($product) && !empty($product->images->data))
-                                @php
-                                $images = collect($product->images->data ?? '');
-                                @endphp
-                                @foreach ($images->sortByDesc('vitrin') as $item)
-                                <div class="item mx-4" data-id="{{$product->id}}" data-model="Product" data-image_no="{{$item['image_no']}}">
-                                    <img src="{{asset($item['image'])}}" class="img-thumbnail">
-                                    <button type="button" class="deleteImage btn btn-sm btn-danger btn btn-sm btn-danger d-flex align-items-center px-2 mt-3">X</button>
-                                    <div class="mt-4">
-                                        <label class="d-block">
-                                            <input class="radio_animated vitrinBtn" type="radio" {{$item['vitrin'] == 1 ? 'checked' : ''}}  >Vitrin Yap
-                                        </label>
-                                    </div>
-                                </div>
-                                @endforeach
-                            @endif
-                           </div>
+                                    @php
+                                        $images = collect($product->images->data ?? '');
+                                    @endphp
+                                    @foreach ($images->sortByDesc('vitrin') as $item)
+                                        <div class="item mx-4" data-id="{{ $product->id }}" data-model="Product"
+                                            data-image_no="{{ $item['image_no'] }}">
+                                            <img src="{{ asset($item['image']) }}" class="img-thumbnail">
+                                            <button type="button"
+                                                class="deleteImage btn btn-sm btn-danger btn btn-sm btn-danger d-flex align-items-center px-2 mt-3">X</button>
+                                            <div class="mt-4">
+                                                <label class="d-block">
+                                                    <input class="radio_animated vitrinBtn" type="radio"
+                                                        {{ $item['vitrin'] == 1 ? 'checked' : '' }}>Vitrin Yap
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
 
                             <div class="form-group">
                                 <label>File upload</label>
