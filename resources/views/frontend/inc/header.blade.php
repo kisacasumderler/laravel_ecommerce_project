@@ -24,7 +24,7 @@
                             <li>
                                 <a href="{{ route('sepet') }}" class="site-cart">
                                     <span class="icon icon-shopping_cart"></span>
-                                    <span class="count">{{$totalQty}}</span>
+                                    <span class="count">{{ $totalQty }}</span>
                                 </a>
                             </li>
                             <li class="d-inline-block d-md-none ml-md-0"><a href="#"
@@ -44,23 +44,9 @@
                 </li>
                 <li class="has-children">
                     <a href="{{ route('urunler') }}">Kategoriler</a>
-                    <ul class="dropdown">
-                        @if (!empty($categories) && $categories->count() > 0)
-                            @foreach ($categories->where('cat_ust', null) as $category)
-                                <li class="has-children">
-                                    <a href="{{ route($category->slug . 'urunler') }}">{{ $category->name }}</a>
-                                    <ul class="dropdown">
-                                        @foreach ($category->subCategory as $category_alt)
-                                            <li>
-                                                <a
-                                                    href="{{ route($category->slug . 'urunler', $category_alt->slug) }}">{{ $category_alt->name }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @endforeach
-                        @endif
-                    </ul>
+                    @php
+                        recursiveCategoryPrint($categoriesAll);
+                    @endphp
                 </li>
                 <li>
                     <a href="{{ route('urunler') }}">Ürünler</a>

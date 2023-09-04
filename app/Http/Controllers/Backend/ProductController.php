@@ -32,7 +32,7 @@ class ProductController extends Controller
 
         $product = Product::create(
             [
-                'category_id' => $request->category_id,
+                'category_id' => $request->category,
                 'name' => $request->name,
                 'price' => ($request->tax_free_price + kdvHesapla($request->tax_free_price, $request->kdv)),
                 'kdv' => $request->kdv,
@@ -67,9 +67,10 @@ class ProductController extends Controller
         $query = Product::where('id', $request->id);
         $product = $query->firstOrfail();
 
+
         Product::where('id', $id)->update(
             [
-                'category_id' => $request->category_id,
+                'category_id' => $request->category,
                 'name' => $request->name,
                 'price' => ($request->tax_free_price + kdvHesapla($request->tax_free_price, $request->kdv)),
                 'kdv' => $request->kdv,

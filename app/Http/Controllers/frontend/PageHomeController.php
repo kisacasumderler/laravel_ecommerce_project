@@ -23,7 +23,6 @@ class PageHomeController extends Controller
         $home = 'Anasayfa';
 
 
-
         $newProducts = Product::where('status', '1')->where('qty', '>', '0')->orderByDesc('id')->with('images')->limit(10)->get();
 
         $couponsWithProducts =

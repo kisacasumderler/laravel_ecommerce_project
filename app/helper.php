@@ -80,7 +80,8 @@ if (!function_exists('dosyaizin')) {
 }
 
 if (!function_exists('klasorac')) {
-    function klasorac($dosyayol, $izinler = 0777) {
+    function klasorac($dosyayol, $izinler = 0777)
+    {
         if (!file_exists($dosyayol)) {
             mkdir($dosyayol, $izinler, true);
         }
@@ -196,26 +197,26 @@ if (!function_exists('metaolustur')) {
 }
 
 if (!function_exists('uploadimage')) {
-    function uploadimage($image,$pathyol,$paththumb=NULL,$with=NULL,$height=NULL)
+    function uploadimage($image, $pathyol, $paththumb = NULL, $with = NULL, $height = NULL)
     {
 
         $fullName = $image->getClientOriginalName();
         $extension = $image->getClientOriginalExtension();
         $onlyName = implode('', explode('.' . $extension, $fullName));
-        $filename =  Str::slug($onlyName) . '-' . time(); //generateOTP(6).'-'.time();
+        $filename = Str::slug($onlyName) . '-' . time(); //generateOTP(6).'-'.time();
 
         if ($image->extension() == 'svg' || $image->extension() == 'webp' || $image->extension() == 'pdf' || $image->extension() == 'ico') {
             $orjinalurl = $pathyol . $filename . '.' . $image->extension();
 
 
-            \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('',$image->path(), $orjinalurl);
+            \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('', $image->path(), $orjinalurl);
 
             $imagear['orj'] = $orjinalurl;
 
-            if(!empty($paththumb)) {
+            if (!empty($paththumb)) {
                 $thumbnailurl = $orjinalurl;
                 $imagear['thum'] = $thumbnailurl;
-            }else {
+            } else {
                 $imagear['thum'] = NULL;
             }
 
@@ -225,22 +226,23 @@ if (!function_exists('uploadimage')) {
 
             $imagear['orj'] = $orjinalurl;
 
-            if(!empty($paththumb)) {
+            if (!empty($paththumb)) {
 
                 $thumbnailurl = $paththumb . 'thumb_' . $filename . '.webp';
                 \Illuminate\Support\Facades\Storage::disk('public')->put($thumbnailurl, \ImageResize::make($image->path())
-                ->resize($with, $height, function ($constraint) {$constraint->aspectRatio();})
-                ->encode('webp', 90));
+                    ->resize($with, $height, function ($constraint) {
+                        $constraint->aspectRatio(); })
+                    ->encode('webp', 90));
 
                 $imagear['thum'] = $thumbnailurl;
-            }else {
+            } else {
                 $imagear['thum'] = NULL;
             }
 
 
         }
 
-        return  $imagear;
+        return $imagear;
     }
 }
 
@@ -262,25 +264,43 @@ if (!function_exists('groupCategory')) {
         return $result;
     }
 }
-
-function recursiveCategoryPrint($categories) {
+function recursiveCategoryPrint($categories, $slugNames = [])
+{
     if (!empty($categories) && count($categories) > 0) {
+        echo '<ul class= "dropdown">';
+        echo '<li>';
         foreach ($categories as $category) {
-            echo $category->name . "<br>";
+            $currentNames = array_merge($slugNames, [$category->slug]);
+            $url = url(reset($currentNames));
 
-            if (!is_string($category->subCat)) {
-                recursiveCategoryPrint($category->subCat);
+            if(count($currentNames) > 1) {
+                $url = url(reset($currentNames),end($currentNames));
             }
+
+            if (!is_string($category->subCat) && is_array($category->subCat) && count($category->subCat) > 0) {
+                echo '<li class = "has-children"> <a href="' . $url . '" >' . $category->name . '</a>';
+                recursiveCategoryPrint($category->subCat,  $currentNames);
+                echo '</li>';
+            } else {
+                echo '<li > <a href="' . $url . '" >' . $category->name . '</a>';
+                echo '</li>';
+            }
+
+
         }
+        echo '</li>';
+        echo '</ul>';
     }
 }
 
-function recursiveCategoryPrintWithParent($categories, $parentNames = [], $selectedCategoryId = null) {
+
+function recursiveCategoryPrintWithParent($categories, $parentNames = [], $selectedCategoryId = null)
+{
     if (!empty($categories) && count($categories) > 0) {
         foreach ($categories as $category) {
             $currentNames = array_merge($parentNames, [$category->name]);
             $selected = ($category->id == $selectedCategoryId) ? 'selected' : '';
-            echo '<option value="'.$category->id.'" '.$selected.'>'.implode('->', $currentNames).'</option>';
+            echo '<option value="' . $category->id . '" ' . $selected . '>' . implode('->', $currentNames) . '</option>';
 
             if (!is_string($category->subCat)) {
                 recursiveCategoryPrintWithParent($category->subCat, $currentNames, $selectedCategoryId);
@@ -289,7 +309,8 @@ function recursiveCategoryPrintWithParent($categories, $parentNames = [], $selec
     }
 }
 
-function disocuntControl($discounts, $product) {
+function disocuntControl($discounts, $product)
+{
     $price = $product->price;
     $discountRate = 0;
 
