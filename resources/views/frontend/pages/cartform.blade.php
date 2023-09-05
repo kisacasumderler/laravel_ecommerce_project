@@ -1,6 +1,6 @@
 @extends('frontend.layout.layout')
 @section('content')
-@include('backend.inc.Breadcrumb')
+    @include('backend.inc.Breadcrumb')
     <div class="site-section">
         <div class="container">
             <div class="row mb-5">
@@ -12,7 +12,7 @@
             </div>
             <form action="{{ route('sepet.save') }}" class="row" method="POST">
                 @csrf
-                <input type="hidden" name="kupon_price" value="{{sifrele(session('kupon_price') ?? null)}}">
+                <input type="hidden" name="kupon_price" value="{{ sifrele(session('kupon_price') ?? null) }}">
                 <div class="col-md-6 mb-5 mb-md-0">
                     <h2 class="h3 mb-3 text-black">Ödeme Bilgileri</h2>
                     <div class="p-3 p-lg-5 border">
@@ -149,6 +149,7 @@
                                     <tbody>
                                         @php
                                             $toplamKDV = 0;
+                                            $toplamIndirim = 0;
                                         @endphp
                                         @if (session()->get('cart'))
                                             @foreach (session()->get('cart') as $key => $cart)
@@ -158,6 +159,15 @@
                                                                 class="mx-2">x</strong>{{ $cart['qty'] }}</td>
                                                         <td>{{ number_format($cart['price'], 2) }}₺</td>
                                                     </tr>
+                                                    @if ($cart['discountAmount'] > 0)
+                                                        @php
+                                                            $toplamIndirim += $cart['discountAmount'];
+                                                        @endphp
+                                                        <tr>
+                                                            <td>Ürün İndirimi</td>
+                                                            <td class="text-danger">-{{ $cart['discountAmount'] }}</td>
+                                                        </tr>
+                                                    @endif
                                                     <tr>
                                                         @php
                                                             $toplamKDV += ($cart['kdv'] ?? 0) * $cart['qty'];
@@ -166,26 +176,35 @@
                                                 @endif
                                             @endforeach
                                         @endif
+                                        @if (session()->get('kupon_price') > 0)
+                                            @php
+                                                $toplamIndirim += session('kupon_price');
+                                            @endphp
+                                            <tr>
+                                                <td class="text-black ">Kupon İndirimi
+                                                </td>
+                                                <td class="text-danger">
+                                                    -{{ number_format(session()->get('kupon_price'), 2) }}₺
+                                                </td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td class="text-black font-weight-bold">Toplam KDV</td>
                                             <td class="text-black">{{ number_format($toplamKDV, 2) }}₺
                                             </td>
                                         </tr>
+                                        @if ($toplamIndirim > 0)
+                                            <tr>
+                                                <td class="text-black font-weight-bold">Toplam İndirim</td>
+                                                <td class="text-black font-weight-bold">-{{ $toplamIndirim }}</td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td class="text-black font-weight-bold"><strong>Sepet Toplamı</strong></td>
                                             <td class="text-black">
                                                 {{ number_format(session()->get('total_price') + session()->get('kupon_price'), 2) }}₺
                                             </td>
                                         </tr>
-                                        @if (session()->get('kupon_price') > 0)
-                                            <tr>
-                                                <td class="text-black font-weight-bold"><strong>İndirim Tutarı</strong>
-                                                </td>
-                                                <td class="text-black font-weight-bold">
-                                                    -{{ number_format(session()->get('kupon_price'), 2) }}₺
-                                                </td>
-                                            </tr>
-                                        @endif
                                         <tr>
                                             <td class="text-black font-weight-bold"><strong>Toplam Tutar</strong>
                                             </td>
@@ -195,12 +214,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-lg py-3 btn-block"
                                         onclick="window.location='thankyou.html'">Ödemeye Devam Et</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>

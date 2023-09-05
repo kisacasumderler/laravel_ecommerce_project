@@ -29,8 +29,9 @@ class DashboardController extends Controller
         ->get();
 
 
-        $aggregatedData = Order::select(DB::raw('name, SUM(price * qty) as total_price, SUM(qty) as total_sold'))
-    //  ->where('status','1')
+      return  $aggregatedData = Order::
+        select(DB::raw('name, SUM(price * qty) as total_price, SUM(qty) as total_sold'))
+    //  ->
         ->groupBy('name')
         ->limit(5)
         ->get();

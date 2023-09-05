@@ -13,6 +13,7 @@
             $newPrice = disocuntControl($discounts, $product);
         @endphp
     @endif
+
     <div class="site-section">
         <div class="container">
             <div class="row">

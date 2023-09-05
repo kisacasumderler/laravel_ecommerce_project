@@ -313,16 +313,20 @@ function disocuntControl($discounts, $product)
 {
     $price = $product->price;
     $discountRate = 0;
+    $couponName = null;
+    $discountAmount = 0;
 
     foreach ($discounts as $discount) {
         if ($discount->category_id == '0' || $discount->category_id == $product->category_id) {
             $discountRate = $discount->discount_rate;
             $price = $price - (($discountRate * $price) / 100);
+            $couponName = $discount->name;
+            $discountAmount = $product->price - $price;
             break;
         }
     }
 
-    return ['price' => $price, 'discountRate' => $discountRate];
+    return ['price' => $price, 'discountRate' => $discountRate,'couponName'=>$couponName, 'discountAmount'=>$discountAmount];
 }
 
 

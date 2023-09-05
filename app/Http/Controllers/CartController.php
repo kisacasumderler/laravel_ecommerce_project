@@ -31,7 +31,7 @@ class CartController extends Controller
             'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.cart', compact('seo','Breadcrumb','cartItem'));
+        return view('frontend.pages.cart', compact('seo', 'Breadcrumb', 'cartItem'));
     }
 
     public function sepetform()
@@ -43,7 +43,7 @@ class CartController extends Controller
             'link' => route('sepet'),
             'name' => 'Sepet',
         ];
-        return view('frontend.pages.cartform', compact('Breadcrumb','cartItem'));
+        return view('frontend.pages.cartform', compact('Breadcrumb', 'cartItem'));
     }
 
     public function add(Request $request)
@@ -56,8 +56,8 @@ class CartController extends Controller
 
 
         // indirim
-        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->where('qty','>','0')->get();
-        $urunFiyat = disocuntControl($discounts,$urun);
+        $discounts = Coupon::where('status', '1')->where('isDiscount', '1')->where('qty', '>', '0')->get();
+        $urunFiyat = disocuntControl($discounts, $urun);
 
         if (!$urun) {
             return back()->withError('Ürün Bulunamadı');
@@ -75,6 +75,7 @@ class CartController extends Controller
                 'qty' => $qty,
                 'size' => $size,
                 'kdv' => $urun->kdv ?? 0,
+                'discountAmount' => $urunFiyat['discountAmount'] ?? '0'
             ];
         }
 
@@ -128,8 +129,8 @@ class CartController extends Controller
         }
         session(['cart' => $cartItem]);
 
-        if($request->ajax()) {
-            return response()->json(['sepetCount'=>count(session()->get('cart')),'message'=>'Ürün Sepetten Kaldırıldı!']);
+        if ($request->ajax()) {
+            return response()->json(['sepetCount' => count(session()->get('cart')), 'message' => 'Ürün Sepetten Kaldırıldı!']);
         }
 
         return back()->withSuccess('Ürün Sepetten Kaldırıldı!');
@@ -138,7 +139,7 @@ class CartController extends Controller
     public function couponcheck(Request $request)
     {
         /* return $request->all(); */
-        $kupon = Coupon::where('name', $request->coupon_name)->where('status','1')->where('isDiscount','0')->where('qty','>','0')->first();
+        $kupon = Coupon::where('name', $request->coupon_name)->where('status', '1')->where('isDiscount', '0')->where('qty', '>', '0')->first();
         $kuponKod = $request->coupon_name ?? '';
         $indirim = $kupon->price ?? 0;
 
@@ -231,28 +232,28 @@ class CartController extends Controller
                 'order_no' => $invoce->order_no,
                 'product_id' => $key,
                 'name' => $item['name'],
-                'price' => $item['price'],
+                'price' => $item['price'] - $item['kdv'],
                 'qty' => $item['qty'],
                 'kdv' => $item['kdv'],
                 "kupon_price" => Guvenlik($kupon_price)
             ]);
 
-            $product = Product::where('id',$key)->first();
-            if($product && $product->qty > 0) {
+            $product = Product::where('id', $key)->first();
+            if ($product && $product->qty > 0) {
                 $product->qty--;
                 $product->save();
-            }else {
-                return back()->withError('Hata: '.$product->name.' adlı ürün stok tükenmiştir.');
+            } else {
+                return back()->withError('Hata: ' . $product->name . ' adlı ürün stok tükenmiştir.');
             }
         }
 
-        if(session('kupon_price') && session('coupon_code')) {
+        if (session('kupon_price') && session('coupon_code')) {
             $coupon_code = session('coupon_code');
-            $coupon = Coupon::where('name',$coupon_code)->first();
-            if($coupon && $coupon->qty > 0) {
+            $coupon = Coupon::where('name', $coupon_code)->first();
+            if ($coupon && $coupon->qty > 0) {
                 $coupon->qty--;
                 $coupon->save();
-            }else {
+            } else {
                 return back()->withError('Uygulamaya çalıştığınız indirim kuponu adedi tükenmiştir.');
             }
             session()->forget('kupon_price');
