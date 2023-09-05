@@ -54,40 +54,11 @@
             <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <p class="card-title">Order Details</p>
-                        <p class="font-weight-500">The total number of sessions within the date range. It is the period time
-                            a user is actively engaged with your website, page or app, etc</p>
-                        <div class="d-flex flex-wrap mb-5">
-                            <div class="mr-5 mt-3">
-                                <p class="text-muted">Order value</p>
-                                <h3 class="text-primary fs-30 font-weight-medium">12.3k</h3>
-                            </div>
-                            <div class="mr-5 mt-3">
-                                <p class="text-muted">Orders</p>
-                                <h3 class="text-primary fs-30 font-weight-medium">14k</h3>
-                            </div>
-                            <div class="mr-5 mt-3">
-                                <p class="text-muted">Users</p>
-                                <h3 class="text-primary fs-30 font-weight-medium">71.56%</h3>
-                            </div>
-                            <div class="mt-3">
-                                <p class="text-muted">Downloads</p>
-                                <h3 class="text-primary fs-30 font-weight-medium">34040</h3>
-                            </div>
-                        </div>
-                        <canvas id="order-chart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <p class="card-title">Sales Report</p>
-                            <a href="#" class="text-info">View all</a>
+                            <p class="card-title">Satış Raporları</p>
+                            <a href="#" class="text-info">Tümünü Gör</a>
                         </div>
-                        <p class="font-weight-500">The total number of sessions within the date range. It is the period time
-                            a user is actively engaged with your website, page or app, etc</p>
+                        <p class="font-weight-500">Bu tablodan en çok satılan ürünleri, toplam satış fiyatlarını ve satış miktarlarını görüntüleyebilirsiniz.</p>
                         <div id="sales-legend" class="chartjs-legend mt-4 mb-2"></div>
                         <canvas id="sales-chart"></canvas>
                     </div>
@@ -196,4 +167,85 @@
             </div>
         </div>
     </div>
+
+@endsection
+
+@section('customjs')
+<script>
+        if ($("#sales-chart").length) {
+      var SalesChartCanvas = $("#sales-chart").get(0).getContext("2d");
+      var SalesChart = new Chart(SalesChartCanvas, {
+        type: 'bar',
+        data: {
+          labels: {!! json_encode($data['labels']) !!},
+          datasets: [{
+              label: 'Toplam Sipriş Sayısı',
+              data: {!! json_encode($data['total_sold']) !!},
+              backgroundColor: '#98BDFF'
+            },
+            {
+              label: 'Toplam Satış Fiyatı',
+              data: {!! json_encode($data['total_price']) !!},
+              backgroundColor: '#4B49AC'
+            }
+          ]
+        },
+        options: {
+          cornerRadius: 5,
+          responsive: true,
+          maintainAspectRatio: true,
+          layout: {
+            padding: {
+              left: 0,
+              right: 0,
+              top: 20,
+              bottom: 0
+            }
+          },
+          scales: {
+            yAxes: [{
+              display: true,
+              gridLines: {
+                display: true,
+                drawBorder: false,
+                color: "#F2F2F2"
+              },
+              ticks: {
+                display: true,
+                min: 0,
+                max: {{ $chartMaxPrice }},
+                callback: function(value, index, values) {
+                  return  value + '₺' ;
+                },
+                autoSkip: true,
+                maxTicksLimit: 10,
+                fontColor:"#6C7383"
+              }
+            }],
+            xAxes: [{
+              stacked: false,
+              ticks: {
+                beginAtZero: true,
+                fontColor: "#6C7383"
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+                display: false
+              },
+              barPercentage: 1
+            }]
+          },
+          legend: {
+            display: false
+          },
+          elements: {
+            point: {
+              radius: 0
+            }
+          }
+        },
+      });
+      document.getElementById('sales-legend').innerHTML = SalesChart.generateLegend();
+    }
+</script>
 @endsection

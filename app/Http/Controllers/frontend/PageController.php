@@ -80,7 +80,7 @@ class PageController extends Controller
 
         return view('frontend.pages.product', compact('seo', 'product', 'Products', 'Breadcrumb', 'discounts'));
     }
-    public function urunler(Request $request,$cat = null, $slug = null)
+    public function urunler(Request $request, $slug = null)
     {
 
         $category = request()->segment(1) ?? null;
@@ -178,7 +178,7 @@ class PageController extends Controller
             'robots' => 'index,follow',
         ];
 
-        return view('frontend.pages.products', compact('seo', 'Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors', 'discounts','cat','slug'));
+        return view('frontend.pages.products', compact('seo', 'Breadcrumb', 'products', 'maxprice', 'sizeLists', 'colors', 'discounts','slug'));
     }
 
     public function iletisim()

@@ -28,6 +28,33 @@ class DashboardController extends Controller
         ->limit(10)
         ->get();
 
-        return view('backend.pages.index',compact('mounthTotalOrderCount','mounthTotalOrderPrice','TotalOrderCount','TotalOrderPrice','topProducts'));
+
+        $aggregatedData = Order::select(DB::raw('name, SUM(price * qty) as total_price, SUM(qty) as total_sold'))
+    //  ->where('status','1')
+        ->groupBy('name')
+        ->limit(5)
+        ->get();
+
+        $labels = $aggregatedData->pluck('name');
+        $total_price = $aggregatedData->pluck('total_price');
+        $total_sold = $aggregatedData->pluck('total_sold');
+
+        $data = [
+            'labels' => $labels,
+            'total_price' => $total_price,
+            'total_sold' => $total_sold
+        ];
+
+        if(!empty($total_price) && $data['total_price'] != '[]') {
+
+            $chartMaxPrice = max($data['total_price']->toArray());
+
+        }else {
+
+            $chartMaxPrice = 500;
+
+        }
+
+        return view('backend.pages.index',compact('mounthTotalOrderCount','mounthTotalOrderPrice','TotalOrderCount','TotalOrderPrice','topProducts','data','chartMaxPrice'));
     }
 }

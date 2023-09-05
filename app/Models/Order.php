@@ -14,7 +14,7 @@ class Order extends Model
         'price',
         'kdv',
         'qty',
-        'kupon_price'
+        'kupon_price',
     ];
 
     public function product() {

@@ -103,6 +103,7 @@
     <script src="{{ asset('backend') }}/js/file-upload.js"></script>
     <script src="{{ asset('backend') }}/js/gitcdn.github.io_bootstrap-toggle_2.2.2_js_bootstrap-toggle.min.js"></script>
     <script src="{{ asset('backend/js/alertify.min.js') }}"></script>
+    <script src="{{ asset('backend/js/chart.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         @if (session()->get('success'))

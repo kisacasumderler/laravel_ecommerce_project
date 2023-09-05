@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->string('order_no')->nullable();
+            $table->enum('status',['0','1'])->default('0');
             $table->string('c_name')->nullable();
             $table->string('c_email_address')->nullable();
             $table->string('c_phone')->nullable();

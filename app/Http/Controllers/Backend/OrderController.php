@@ -28,7 +28,14 @@ class OrderController extends Controller
 
 
     public function update (Request $request,$id) {
-
+        $invoice = Invoice::where('id',$id)->first();
+        $invoice->status = $request->status;
+        $invoice->save();
+        if($invoice->save()) {
+            return back()->withSuccess('Durum Başarıyla Güncellendi.');
+        }else {
+            return back()->withError('Hata: Güncelleme işlemi sırasında hata alınmaktadır.');
+        }
     }
 
     public function destroy(Request $request)
