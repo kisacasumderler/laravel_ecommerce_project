@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OfferRequest;
+use App\Models\Category;
 use App\Models\specialOffer;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,15 @@ class SpecialOfferController extends Controller
     {
         $offer = specialOffer::where('id',1)->first();
 
-        return view('backend.pages.specialOffer.index',compact('offer'));
+        $categories = Category::where('status', '1')->select('id','name','cat_ust')->get();
+        $categories = groupCategory($categories);
+
+        return view('backend.pages.specialOffer.index',compact('offer','categories'));
     }
     public function update(OfferRequest $request)
     {
+        // return $request->all();
+
         $id = 1;
         $fileName = specialOffer::Where('id',$id)->first()->image ?? null;
 

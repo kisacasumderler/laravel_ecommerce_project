@@ -319,6 +319,7 @@ function recursiveCategoryPrintWithParent($categories, $parentNames = [], $selec
     }
 }
 
+
 function disocuntControl($discounts, $product)
 {
     $price = $product->price;

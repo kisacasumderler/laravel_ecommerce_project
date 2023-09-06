@@ -33,8 +33,18 @@
                         <textarea type="text" class="form-control" id="editor" name="message" rows="10"> {{ $offer->message ?? 'Kampanya Bilgilendirme metni giriniz.' }} </textarea>
                     </div>
                     <div class="form-group">
-                        <label for="link">Link</label>
-                        <input type="text" value="indirimdekiurunler" class="form-control" name="link" id="link" disabled>
+                        @if (!empty($categories))
+                        @php
+                            $couponCatId = $coupon->category_id ?? '0';
+                        @endphp
+                            <div class="form-group">
+                                <label for="link">İndirim Uygulanacak Ürünler</label>
+                                <select name="link" id="link" class="form-control">
+                                    <option value="0">Tüm Ürünler</option>
+                                    {{ recursiveCategoryPrintWithParent($categories,[],$couponCatId) }}
+                                </select>
+                            </div>
+                        @endif
                     </div>
                     <div class="form-row align-items-end">
                         <div class="col">
