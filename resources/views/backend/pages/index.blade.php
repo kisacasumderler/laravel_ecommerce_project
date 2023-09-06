@@ -64,47 +64,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-7 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title mb-0">Top Products</p>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th>Ürün Fotoğrafı</th>
-                                        <th>Ürün Adı</th>
-                                        <th>Toplam Satış</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (!empty('topProducts') && $topProducts->count() > 0)
-                                        @foreach ($topProducts as $topProduct)
-                                       @isset($topProduct->product->images)
-                                            @php
-                                                $image = collect($topProduct->product->images->data)->sortByDesc('vitrin')->first()['image'];
-                                            @endphp
-                                       @endisset
-                                            <tr>
-                                                <td>
-                                                    <img src="{{asset($image ?? 'images/resimyok.jpg')}}" alt="{{str_replace(' ','-',$topProduct->product->name ?? '')}}">
-                                                </td>
-                                                <td class="font-weight-bold">{{$topProduct->product->name ?? 'Ürün Bulunamadı'}}</td>
-                                                <td>{{$topProduct->total_sold ?? '0'}}</td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 grid-margin stretch-card">
+            <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">To Do Lists</h4>
@@ -165,6 +125,46 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title mb-0">Top Products</p>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün Fotoğrafı</th>
+                                        <th>Ürün Adı</th>
+                                        <th>Toplam Satış</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!empty('topProducts') && $topProducts->count() > 0)
+                                        @foreach ($topProducts as $topProduct)
+                                       @isset($topProduct->product->images)
+                                            @php
+                                                $image = collect($topProduct->product->images->data)->sortByDesc('vitrin')->first()['image'];
+                                            @endphp
+                                       @endisset
+                                            <tr>
+                                                <td>
+                                                    <img src="{{asset($image ?? 'images/resimyok.jpg')}}" alt="{{str_replace(' ','-',$topProduct->product->name ?? '')}}">
+                                                </td>
+                                                <td class="font-weight-bold">{{$topProduct->product->name ?? 'Ürün Bulunamadı'}}</td>
+                                                <td>{{$topProduct->total_sold ?? '0'}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
