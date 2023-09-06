@@ -5,5 +5,3 @@ Hem php bilgilmi geliştirmek hem de laravel öğrenmek için proje geliştirere
 Aslında hala eksik olan çok şey var ancak larave ve react ile yeni bir projeye başlarak hem react hemde laravel bilgimi yine projeyle gelişirmek için şimdilik ara veriyorum yine de zaman buldukça güncellemeye devam edeceğim. 
 Temelde çoğu şey bitti zaten yönetim paneli sayfalar tamamlandı. 
 
-<!-- - [Projeyi canlıya aldım buradan önizleyebilirsiniz.](https://laravel.com/docs/routing). -->
-
