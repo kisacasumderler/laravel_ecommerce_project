@@ -7,3 +7,8 @@ Temelde çoğu şey bitti zaten yönetim paneli sayfalar tamamlandı.
 
 <!-- - [Projeyi canlıya aldım buradan önizleyebilirsiniz.](https://laravel.com/docs/routing). -->
 
+sayfalar : 
+
+
+
+
