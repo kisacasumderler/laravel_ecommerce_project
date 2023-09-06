@@ -9,6 +9,6 @@ Temelde çoğu şey bitti zaten yönetim paneli sayfalar tamamlandı.
 
 sayfalar : 
 
-
+![Alternatif Metin](storage/app/public/img/about/b81720d6017bfc158d401319a-1693239285.webp)
 
 
