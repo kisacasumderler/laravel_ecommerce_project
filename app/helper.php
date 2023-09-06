@@ -196,6 +196,9 @@ if (!function_exists('metaolustur')) {
     }
 }
 
+use Intervention\Image\ImageManagerStatic as Image;
+
+
 if (!function_exists('uploadimage')) {
     function uploadimage($image, $pathyol, $paththumb = NULL, $with = NULL, $height = NULL)
     {
@@ -209,7 +212,9 @@ if (!function_exists('uploadimage')) {
             $orjinalurl = $pathyol . $filename . '.' . $image->extension();
 
 
-            \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('', $image->path(), $orjinalurl);
+            // \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('', $image->path(), $orjinalurl);
+            \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, Image::make($image->path())->encode('webp', 90));
+
 
             $imagear['orj'] = $orjinalurl;
 
@@ -222,17 +227,22 @@ if (!function_exists('uploadimage')) {
 
         } else {
             $orjinalurl = $pathyol . $filename . '.webp';
-            \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, \ImageResize::make($image->path())->encode('webp', 90));
+            // \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, \ImageResize::make($image->path())->encode('webp', 90));
+            \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, Image::make($image->path())->encode('webp', 90));
+
 
             $imagear['orj'] = $orjinalurl;
 
             if (!empty($paththumb)) {
 
                 $thumbnailurl = $paththumb . 'thumb_' . $filename . '.webp';
-                \Illuminate\Support\Facades\Storage::disk('public')->put($thumbnailurl, \ImageResize::make($image->path())
-                    ->resize($with, $height, function ($constraint) {
-                        $constraint->aspectRatio(); })
-                    ->encode('webp', 90));
+                // \Illuminate\Support\Facades\Storage::disk('public')->put($thumbnailurl, \ImageResize::make($image->path())
+                //     ->resize($with, $height, function ($constraint) {
+                //         $constraint->aspectRatio(); })
+                //     ->encode('webp', 90));
+
+                \Illuminate\Support\Facades\Storage::disk('public')->put($orjinalurl, Image::make($image->path())->encode('webp', 90));
+
 
                 $imagear['thum'] = $thumbnailurl;
             } else {

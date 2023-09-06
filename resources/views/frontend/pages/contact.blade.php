@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-md-7">
 
-                    <form action="{{ route('iletisim.kaydet') }}" method="post">
+                    <form id="createForm" method="post">
                         @csrf
                         <div class="p-3 p-lg-5 border">
                             <div class="form-group row">
@@ -83,4 +83,63 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('customjs')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+ $(document).on('submit', '#createForm', function(e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+           var item = $(this);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type:"POST",
+                url:"{{route('iletisim.kaydet')}}",
+                data:formData,
+                success: function (response) {
+                    console.log(response);
+
+                        if(response.error == false) {
+                            Swal.fire({
+                            title: 'Başarılı!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Tamam',
+                            customClass: {
+                                    confirmButton: 'sweetButtonColor'
+                                }
+                            })
+                        }else{
+                            Swal.fire({
+                            title: 'Hata!',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Tamam',
+                                customClass: {
+                                    confirmButton: 'sweetButtonColor'
+                                }
+                            })
+                        }
+
+                        $("#createForm")[0].reset();
+
+                },
+                error: function(xhr, status, error)
+                {
+
+                    $.each(xhr.responseJSON.errors, function (key, item)
+                    {
+                        $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
+                    });
+
+                }
+
+            });
+
+        });
+</script>
 @endsection

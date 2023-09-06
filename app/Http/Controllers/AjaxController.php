@@ -21,7 +21,14 @@ class AjaxController extends Controller
         ];
 
         $sonkaydedilen = Contact::create($newData);
-        return back()->with(['message'=>'Başarıyla Gönderildi']);
+
+        if($sonkaydedilen) {
+            return response()->json(['message'=>'Başarıyla Gönderildi','error'=>false]);
+        }else {
+            return response()->json(['message'=>'İletişim Kaydetme işleminde hata alınmaktadır.','error'=>true]);
+        }
+
+
     }
 
     public function logout () {

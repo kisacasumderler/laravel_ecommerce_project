@@ -44,4 +44,6 @@ class ContentFormRequest extends FormRequest
             'message.max'=>'Mesaj en fazla 500 karakter uzunluğunda olmalıdır.'
         ];
     }
+
+
 }

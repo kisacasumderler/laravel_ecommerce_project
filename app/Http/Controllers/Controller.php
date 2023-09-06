@@ -14,7 +14,7 @@ class Controller extends BaseController
 
     public function fileSave($modelName = null, $filename, $request, $data, $name = 'image')
     {
-        $pathOriginal = 'img/' . $filename . '/';
+        $pathOriginal = 'images/' . $filename . '/';
         klasorac($pathOriginal);
 
         $image = $request->file($name);
